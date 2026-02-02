@@ -14,3 +14,4 @@ RUN ./contrib/download_prerequisites
 COPY make-gcc/build/ /opt/make-gcc/build/
 WORKDIR /opt/make-gcc/build
 RUN ./my-configure.bash --prefix=/opt/gcc
+RUN make -j`nproc`
