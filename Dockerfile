@@ -47,11 +47,16 @@ RUN make -j`nproc`
 
 
 FROM base AS dev
+
 COPY --from=cmake-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/cmake/bin"
 COPY --from=conan-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/conan/bin"
 COPY --from=gcc-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/gcc/bin"
+
+COPY HOME/.inputrc    /root/.inputrc
+#COPY HOME/.bash_login /root/.bash_login
+#COPY HOME/.bashrc     /root/.bashrc
 
 ENTRYPOINT ["/bin/bash"]
