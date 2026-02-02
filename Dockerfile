@@ -47,6 +47,7 @@ RUN make -j`nproc`
 
 
 FROM base AS dev
+RUN apt install -y emacs-nox bash-completion git
 
 COPY --from=cmake-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/cmake/bin"
