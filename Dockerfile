@@ -52,6 +52,8 @@ RUN apt install -y openssh-server
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
 RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
+RUN echo >>/etc/ssh/sshd_config 'Banner none'
+RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir /var/run/sshd
 
 
