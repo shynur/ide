@@ -42,6 +42,7 @@ RUN ./my-configure.bash --prefix=/opt/gcc
 RUN apt install -y bison
 RUN apt install -y make
 RUN make -j`nproc`
+RUN make install
 
 
 
@@ -49,15 +50,15 @@ RUN make -j`nproc`
 FROM base AS dev
 RUN apt install -y emacs-nox bash-completion git
 
-COPY --from=cmake-builder /opt/ /opt/
+COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
-COPY --from=conan-builder /opt/ /opt/
+COPY --from=conan-builder /opt/conan/ /opt/conan/
 ENV PATH="$PATH:/opt/conan/bin"
-COPY --from=gcc-builder /opt/ /opt/
+COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 ENV PATH="$PATH:/opt/gcc/bin"
 
-COPY HOME/.inputrc    /root/.inputrc
-#COPY HOME/.bash_login /root/.bash_login
-#COPY HOME/.bashrc     /root/.bashrc
+COPY HOME/.inputrc    /root/
+#COPY HOME/.bash_login /root/
+#COPY HOME/.bashrc     /root/
 
 ENTRYPOINT ["/bin/bash"]
