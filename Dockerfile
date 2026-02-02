@@ -47,10 +47,18 @@ RUN make install
 
 
 
-FROM base AS dev
-RUN apt install -y emacs-nox bash-completion git openssh-server iproute2 sudo
-
+FROM base AS ssh-server
+RUN apt install -y openssh-server
 EXPOSE 22
+RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
+RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
+RUN mkdir /var/run/sshd
+
+
+
+
+FROM ssh-server AS dev
+RUN apt install -y emacs-nox bash-completion git iproute2 sudo
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
@@ -64,4 +72,5 @@ COPY HOME/.inputrc    /root/
 #COPY HOME/.bash_login /root/
 #COPY HOME/.bashrc     /root/
 
+RUN echo 'root: ' | chpasswd
 ENTRYPOINT ["/bin/bash"]
