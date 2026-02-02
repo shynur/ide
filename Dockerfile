@@ -53,3 +53,5 @@ COPY --from=conan-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/conan/bin"
 COPY --from=gcc-builder /opt/ /opt/
 ENV PATH="$PATH:/opt/gcc/bin"
+
+ENTRYPOINT ["/bin/bash"]
