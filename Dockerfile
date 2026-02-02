@@ -48,14 +48,17 @@ RUN make install
 
 
 FROM base AS dev
-RUN apt install -y emacs-nox bash-completion git
+RUN apt install -y emacs-nox bash-completion git openssh-server iproute2 sudo
+
+EXPOSE 22
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
 COPY --from=conan-builder /opt/conan/ /opt/conan/
 ENV PATH="$PATH:/opt/conan/bin"
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-ENV PATH="$PATH:/opt/gcc/bin"
+ENV CC=/opt/gcc/bin/gcc-16
+ENV CXX=/opt/gcc/bin/g++-16
 
 COPY HOME/.inputrc    /root/
 #COPY HOME/.bash_login /root/
