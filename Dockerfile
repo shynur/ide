@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 #RUN dpkg-reconfigure --frontend noninteractive tzdata
 RUN apt install -y g++ make wget
+RUN apt install -y bzip2
 
 COPY make-gcc/ /opt/make-gcc/
 WORKDIR /opt/make-gcc/src
