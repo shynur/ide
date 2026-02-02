@@ -48,6 +48,8 @@ RUN make -j`nproc`
 
 FROM base AS dev
 COPY --from=cmake-builder /opt/ /opt/
+ENV PATH="$PATH:/opt/cmake/bin"
 COPY --from=conan-builder /opt/ /opt/
+ENV PATH="$PATH:/opt/conan/bin"
 COPY --from=gcc-builder /opt/ /opt/
-ENV PATH="/opt/cmake/bin:/opt/conan/bin:/opt/gcc/bin:${PATH}"
+ENV PATH="$PATH:/opt/gcc/bin"
