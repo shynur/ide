@@ -8,8 +8,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt install -y g++ make wget
 RUN apt install -y bzip2
 
-COPY make-gcc/ /opt/make-gcc/
+COPY make-gcc/src/ /opt/make-gcc/src/
 WORKDIR /opt/make-gcc/src
 RUN ./contrib/download_prerequisites
+#------
+COPY make-gcc/build/ /opt/make-gcc/build/
 WORKDIR /opt/make-gcc/build
-RUN ../src/my-configure.bash --prefix=/opt/gcc
+RUN ./my-configure.bash --prefix=/opt/gcc

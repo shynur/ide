@@ -28,4 +28,5 @@ CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
 --enable-lto \
 --disable-cet \
 --enable-x86-64-mfentry \
+--disable-multilib \
 "$@"
