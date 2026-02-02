@@ -9,7 +9,7 @@ FROM base AS cmake-builder
 RUN apt install -y wget
 WORKDIR /tmp
 RUN bash -c 'wget https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-$HOSTTYPE.sh'
-RUN bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
+RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
 
 
 
@@ -22,7 +22,7 @@ FROM base AS conan-builder
 RUN apt install -y wget
 WORKDIR /tmp
 RUN bash -c 'wget https://github.com/conan-io/conan/releases/download/2.25.1/conan-2.25.1-linux-$HOSTTYPE.tgz'
-RUN bash -c 'mkdir -p /opt/conan; tar -xf ./conan-*-$HOSTTYPE.tgz -C /opt/conan'
+RUN mkdir -p /opt/conan; bash -c 'tar -xf ./conan-*-$HOSTTYPE.tgz -C /opt/conan'
 
 
 
