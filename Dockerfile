@@ -8,4 +8,5 @@ RUN apt install -y g++ make wget
 
 COPY make-gcc/ /opt/make-gcc/
 WORKDIR /opt/make-gcc/build
+RUN ../src/contrib/download_prerequisites
 RUN ../src/my-configure.bash --prefix=/opt/gcc
