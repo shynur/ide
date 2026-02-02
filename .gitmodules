@@ -2,5 +2,5 @@
 	path = make-gcc/src
 	url = git://gcc.gnu.org/git/gcc.git
 [submodule "conan"]
-	path = conan
+	path = conan-io
 	url = https://github.com/conan-io/conan.git
