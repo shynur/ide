@@ -14,5 +14,16 @@
 --enable-languages=c++ \
 --enable-libsanitizer \
 --enable-libgomp \
-
+--disable-default-pie \
+--disable-default-ssp \
+--disable-checking \
+--disable-coverage \
+--disable-gather-detailed-mem-stats \
+--disable-nls \
+--disable-decimal-float \
+--disable-fixed-point \
+--enable-linker-build-id \
+--enable-lto \
+--disable-cet \
+--enable-x86-64-mfentry \
 "$@"
