@@ -1,5 +1,4 @@
 FROM ubuntu AS gcc-builder
-
 RUN apt update
 ENV DEBIAN_FRONTEND=noninteractive
 #RUN apt install -y tzdata
