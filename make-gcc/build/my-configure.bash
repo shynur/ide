@@ -1,6 +1,8 @@
 #!/bin/bash
 
-../src/configure \
+CFLAGS='-g0 -O3'
+
+CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
 --program-suffix=-16 \
 --enable-shared \
 --disable-host-shared \
