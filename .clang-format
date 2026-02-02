@@ -1,0 +1,203 @@
+---
+AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Right
+AlignOperands: Align
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All  # Done.
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BitFieldColonSpacing: None
+
+# Done.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+BreakBeforeBinaryOperators: All
+
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit: 0
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Leave
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentGotoLabels: false
+InsertBraces: false
+IntegerLiteralSeparator:
+  Binary: 4
+  Decimal: 4
+  Hex: 0
+KeepEmptyLinesAtTheStartOfBlocks: false
+LambdaBodyIndentation: Signature
+LineEnding: LF
+MaxEmptyLinesToKeep: 1
+ReflowComments: false
+RemoveBracesLLVM: true
+RemoveSemicolon: true
+SeparateDefinitionBlocks: Leave
+SpaceAfterLogicalNot: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterFunctionDeclarationName: false
+  AfterFunctionDefinitionName: false
+  AfterOverloadedOperator: false
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 1
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+...
+
+---
+Language: Cpp
+IndentWidth: 4
+IndentAccessModifiers: false  # 使用 `AccessModifierOffset` 控制缩进
+AccessModifierOffset: -2  # `public:` 的缩进与基础缩进叠加, 所以是负的.
+AlignAfterOpenBracket: BlockIndent
+# func_name(
+#     arg1, arg2
+# )
+AlignArrayOfStructures: Right
+# {
+#     { 10, },
+#     {  2, },  // 右对齐
+# }
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false  # 不要跨空行对齐
+  AcrossComments: false    # 不要跨注释对齐
+  AlignCompound: true      # 对齐复合赋值
+  AlignFunctionDeclarations: false  # 不对齐函数声明
+  AlignFunctionPointers: false
+  # unsigned i;
+  # int     &r;
+  # int     *p;
+  # int (*f)();
+  PadOperators: false  # 紧凑
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: false  # 不要跨空行对齐
+  AcrossComments: false    # 不要跨注释对齐
+  AlignCompound: true      # 对齐复合赋值
+  AlignFunctionDeclarations: false  # 不对齐函数声明
+  AlignFunctionPointers: false
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false  # 不要跨空行对齐
+  AcrossComments: false    # 不要跨注释对齐
+  AlignCompound: true      # 对齐复合赋值
+  AlignFunctionDeclarations: false  # 不对齐函数声明
+  AlignFunctionPointers: false
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: false  # 不要跨空行对齐
+  AcrossComments: false    # 不要跨注释对齐
+  AlignCompound: true      # 对齐复合赋值
+  AlignFunctionDeclarations: false  # 不对齐函数声明
+  AlignFunctionPointers: false
+AlignEscapedNewlines: Left
+# #define A    \
+#   int aaaa;  \
+#   int b;     \
+#   int dddddddddd;
+BreakTemplateDeclarations: MultiLine  # 函数声明需要多行则 template 单独一行
+# template <typename T> T foo() {
+# }
+# template <typename T>
+# T foo(int aaaaaaaaaaaaaaaaaaaaa,
+#       int bbbbbbbbbbbbbbbbbbbbb) {
+# }
+BreakAfterAttributes: Leave  # 不动
+BreakBeforeConceptDeclarations: Always
+# template <class T>  // 总是换行
+# concept C = true;
+CompactNamespaces: false
+Cpp11BracedListStyle: true
+FixNamespaceComments: true
+IncludeBlocks: Preserve
+SortIncludes: CaseInsensitive
+IndentExternBlock: Indent
+IndentPPDirectives: AfterHash
+IndentRequiresClause: true
+NamespaceIndentation: All
+PPIndentWidth: 2
+# #ifdef __linux__
+# #  define FOO
+# #else
+# #  define BAR
+# #endif
+PackConstructorInitializers: NextLine
+ConstructorInitializerIndentWidth: 0
+PointerAlignment: Right
+QualifierAlignment: Custom
+QualifierOrder:
+  - constexpr
+  - inline
+  - friend
+  - static
+  - volatile
+  - restrict
+  - const
+  - type
+ReferenceAlignment: Left
+#RequiresClausePosition
+RequiresExpressionIndentation: OuterScope
+ShortNamespaceLines: 25  # 少于这么多行的 namespace 块的末尾不需要对称的注释
+SortUsingDeclarations: Never
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeInheritanceColon: false
+SpaceBeforeRangeBasedForLoopColon: true
+SpacesInAngles: Never
+Standard: Latest
+SpacesInParensOptions:
+  ExceptDoubleParentheses: false
+  InConditionalStatements: false
+  InCStyleCasts: false
+  InEmptyParentheses: false
+  Other: false
+SpaceBeforeCtorInitializerColon: false
+# TODO: AlignConsecutiveShortCaseStatements
+...
+
+---
+Language: JavaScript
+JavaScriptWrapImports: true
+...

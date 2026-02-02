@@ -1,0 +1,10 @@
+{
+    "version": 1,
+    "configurePresets": [
+        {
+            "name": "default",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/cmake-build"
+        }
+    ]
+}

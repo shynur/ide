@@ -1,0 +1,67 @@
+{
+	"files.trimTrailingWhitespace": true,
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+
+	"editor.detectIndentation": false,
+
+	"files.eol": "\n",
+	"files.encoding": "utf8",
+
+	"editor.formatOnSave": false,
+
+	"[C_Cpp]": {
+		"autoAddFileAssociations": false,
+        "caseSensitiveFileSupport": "enabled",
+		"files.exclude": {
+			"/usr/include/c++/10": true,
+        	"/usr/include/c++/11": true,
+			"/usr/include/c++/12": true,
+			"/usr/include/c++/13": true,
+			"/usr/include/c++/14": true,
+        	"/usr/local/include/c++/10": true,
+			"/usr/local/include/c++/11": true,
+			"/usr/local/include/c++/12": true,
+			"/usr/local/include/c++/13": true,
+			"/usr/local/include/c++/14": true
+    	}
+	},
+
+	"[go]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnSaveMode": "file",
+
+		"editor.tabSize": 8,
+		"editor.insertSpaces": false,
+        "testFlags": ["-test.v"]
+	},
+
+    "[javascript]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+		"format.insertSpaceBeforeFunctionParenthesis": false
+    },
+
+	"[yaml]": {
+		"editor.insertSpaces": true,
+		"editor.tabSize": 2
+	},
+
+	"[json]": {
+		"editor.insertSpaces": false,
+		"editor.tabSize": 4
+	},
+
+	"prettier.semi": false,
+	"prettier.arrowParens": "avoid",
+
+	"files.associations": {
+		".clang-format": "yaml",
+		"_clang-format": "yaml"
+	},
+
+	"[html]": {
+		"editor.tabSize": 4,
+		"editor.insertSpaces": false
+	}
+}

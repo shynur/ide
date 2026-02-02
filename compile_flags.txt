@@ -1,0 +1,9 @@
+-fsyntax-only
+-std=c++26
+-Wpedantic
+-Wall
+-W
+-ferror-limit=0
+--gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/15
+-Iinclude
+-fmodules

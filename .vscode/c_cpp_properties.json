@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/include"
+            ],
+            "defines": [],
+            "compilerPath": "/bin/clang++-21",
+            "cppStandard": "c++26",
+            "intelliSenseMode": "gcc-x64",
+            "compilerArgs": [
+                "--gcc-install-dir=/usr/local/lib/gcc/x86_64-pc-linux-gnu/15",
+                "-std=c++26", "-Wpedantic", "-Wall", "-W"
+            ]
+        }
+    ],
+    "version": 4
+}
