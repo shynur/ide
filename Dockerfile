@@ -79,15 +79,6 @@ RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
 
 FROM ssh-server AS dev
 
-RUN apt install -y tzdata
-RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN dpkg-reconfigure --frontend noninteractive tzdata
-#RUN apt install -y python3
-
-RUN apt install -y emacs-nox bash-completion git iproute2 sudo make htop wget
-RUN apt install -y curl psmisc tree
-RUN apt install -y fzf
-
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
 
@@ -99,6 +90,16 @@ RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
+
+RUN apt install -y tzdata
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN dpkg-reconfigure --frontend noninteractive tzdata
+#RUN apt install -y python3
+
+RUN apt install -y emacs-nox bash-completion git iproute2 sudo make htop wget
+RUN apt install -y curl psmisc tree
+RUN apt install -y fzf
+RUN apt install -y bat
 
 COPY HOME/.inputrc    /root/
 
