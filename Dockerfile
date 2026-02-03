@@ -109,3 +109,30 @@ COPY HOME/.bashrc     /root/.shynur.bashrc
 RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
 RUN echo 'root: ' | chpasswd
 CMD ["/bin/bash", "-l"]
+
+
+
+
+
+
+FROM dev AS rbk-dev-base
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
+RUN apt install -y libbson-1.0
+
+FROM rbk-dev-base AS rbk-dev-spdlog-builder
+WORKDIR /tmp
+RUN git clone https://github.com/gabime/spdlog.git
+RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
+RUN cmake --build build 
+RUN cmake --install build --prefix /opt/spdlog
+
+FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
+WORKDIR /tmp
+RUN git clone https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
+RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
+RUN cmake --build build
+RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
+
+FROM rbk-dev-base AS rbk-dev-final
+COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
+COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud_sdk/ /usr/local/

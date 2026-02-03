@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CFLAGS='-g0 -O3'
+CFLAGS='-g0 -O3 -Oz'
 
 CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
 --program-suffix=-16 \
@@ -29,4 +29,5 @@ CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
 --disable-cet \
 --enable-x86-64-mfentry \
 --disable-multilib \
+--enable-target-optspace \
 "$@"
