@@ -77,7 +77,7 @@ COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
-RUN emacs -eval "(package-install 'dockerfile-mode)" -kill
+RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
 
 COPY HOME/.inputrc    /root/
 #COPY HOME/.bash_login /root/
