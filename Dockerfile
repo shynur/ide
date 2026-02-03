@@ -82,12 +82,15 @@ FROM ssh-server AS dev
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
+ENV PATH="$PATH:/opt/cmake/bin"
 
 COPY --from=conan-builder /opt/conan/ /opt/conan/
 RUN echo 'export PATH+=:/opt/conan/bin' >>/etc/profile
+ENV PATH="$PATH:/opt/conan/bin"
 
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
+ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
@@ -121,16 +124,16 @@ RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-d
 
 FROM rbk-dev-base AS rbk-dev-spdlog-builder
 WORKDIR /tmp
-RUN git clone https://github.com/gabime/spdlog.git
+RUN git clone --single-branch --depth=1 https://github.com/gabime/spdlog.git
 RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
-RUN cmake --build build 
+RUN cmake --build build -j
 RUN cmake --install build --prefix /opt/spdlog
 
 FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
 WORKDIR /tmp
-RUN git clone https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
+RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
 RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
-RUN cmake --build build
+RUN cmake --build build -j
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 FROM rbk-dev-base AS rbk-dev-final
