@@ -118,7 +118,6 @@ CMD ["/bin/bash", "-l"]
 
 FROM dev AS rbk-dev-base
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
-RUN apt install -y libbson-1.0
 
 FROM rbk-dev-base AS rbk-dev-spdlog-builder
 WORKDIR /tmp
