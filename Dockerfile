@@ -112,6 +112,7 @@ COPY HOME/.bashrc     /root/.shynur.bashrc
 
 RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
 RUN echo 'root: ' | chpasswd
+WORKDIR /root/
 CMD ["/bin/bash", "-l"]
 
 
@@ -142,6 +143,8 @@ RUN apt install -y librttr-dev  # 我服了 huawei 这个逆天 README 里居然
 RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
 RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
+WORKDIR /tmp/huaweicloud-sdk-cpp-v3
+RUN bash -c 'for huaweicloud_subd in cce vpc; do cp -r ./$huaweicloud_subd/include/huaweicloud/$huaweicloud_subd /opt/huaweicloud-sdk-cpp-v3/include/huaweicloud/; done'
 
 FROM dev AS rbk-dev-final
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
