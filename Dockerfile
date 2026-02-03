@@ -139,5 +139,5 @@ RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 FROM rbk-dev-base AS rbk-dev-final
-COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
-COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud_sdk/ /usr/local/
+COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/                 /usr/local/
+COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /usr/local/
