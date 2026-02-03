@@ -26,6 +26,7 @@ RUN mkdir -p /opt/conan; bash -c 'tar -xf ./conan-*-$HOSTTYPE.tgz -C /opt/conan'
 FROM base AS gcc-builder
 RUN apt install -y g++ wget
 RUN apt install -y bzip2
+RUN apt install -y file
 
 COPY make-gcc/src/ /tmp/make-gcc/src/
 WORKDIR /tmp/make-gcc/src
