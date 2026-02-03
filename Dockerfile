@@ -126,7 +126,7 @@ FROM rbk-dev-base AS rbk-dev-spdlog-builder
 WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/gabime/spdlog.git
 RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
-RUN cmake --build build -j
+RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/spdlog
 
 FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
@@ -135,7 +135,7 @@ WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
 RUN apt install -y librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
 RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
-RUN cmake --build build -j
+RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 FROM rbk-dev-base AS rbk-dev-final
