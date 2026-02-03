@@ -85,6 +85,7 @@ RUN dpkg-reconfigure --frontend noninteractive tzdata
 #RUN apt install -y python3
 
 RUN apt install -y emacs-nox bash-completion git iproute2 sudo make htop wget
+RUN apt install -y curl pstree tree
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
