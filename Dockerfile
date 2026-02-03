@@ -119,8 +119,13 @@ CMD ["/bin/bash", "-l"]
 
 
 
-FROM dev AS rbk-dev-base
+FROM base AS rbk-dev-base
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
+RUN apt install -y git make
+COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
+ENV PATH="$PATH:/opt/cmake/bin"
+COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
 FROM rbk-dev-base AS rbk-dev-spdlog-builder
 WORKDIR /tmp
@@ -138,6 +143,7 @@ RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
 RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
-FROM rbk-dev-base AS rbk-dev-final
+FROM dev AS rbk-dev-final
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
 COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/                 /usr/local/
 COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /usr/local/
