@@ -1,6 +1,3 @@
-[submodule "conan"]
-	path = conan-io
-	url = https://github.com/conan-io/conan.git
 [submodule "HOME"]
 	path = HOME
 	url = https://github.com/shynur/HOME.git
