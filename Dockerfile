@@ -80,4 +80,4 @@ COPY HOME/.inputrc    /root/
 #COPY HOME/.bashrc     /root/
 
 RUN echo 'root: ' | chpasswd
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-l"]
