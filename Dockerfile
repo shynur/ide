@@ -100,7 +100,7 @@ COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
 COPY HOME/.inputrc    /root/
 
-RUN echo '. .shynur.bashrc' >>/root/.bashrc
+RUN echo '. ~/.shynur.bashrc' >>/root/.bashrc
 COPY HOME/.bashrc     /root/.shynur.bashrc
 
 RUN echo 'root: ' | chpasswd
