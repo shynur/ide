@@ -15,10 +15,6 @@ RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --p
 
 
 FROM base AS conan-builder
-#RUN apt install -y tzdata
-#RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-#RUN dpkg-reconfigure --frontend noninteractive tzdata
-#RUN apt install -y python3
 RUN apt install -y wget
 WORKDIR /tmp
 RUN bash -c 'wget https://github.com/conan-io/conan/releases/download/2.25.1/conan-2.25.1-linux-$HOSTTYPE.tgz'
@@ -63,7 +59,13 @@ RUN mkdir -p /var/run/sshd
 
 
 FROM ssh-server AS dev
-RUN apt install -y emacs-nox bash-completion git iproute2 sudo
+
+RUN apt install -y tzdata
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN dpkg-reconfigure --frontend noninteractive tzdata
+#RUN apt install -y python3
+
+RUN apt install -y emacs-nox bash-completion git iproute2 sudo make htop wget
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
