@@ -78,7 +78,7 @@ RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'cvs-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'csv-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'git-modes)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'go-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'json-mode)\")"
