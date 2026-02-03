@@ -58,6 +58,25 @@ RUN mkdir -p /var/run/sshd
 
 
 
+FROM base AS dotemacs-builder
+RUN apt install -y emacs-nox
+
+RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'csv-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'git-modes)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'go-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'json-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'markdown-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'nginx-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'rainbow-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'sed-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'typescript-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'web-mode)\")"
+RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
+
+
+
+
 FROM ssh-server AS dev
 
 RUN apt install -y tzdata
@@ -77,18 +96,7 @@ COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
-RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'csv-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'git-modes)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'go-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'json-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'markdown-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'nginx-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'rainbow-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'sed-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'typescript-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'web-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
+COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
 COPY HOME/.inputrc    /root/
 #COPY HOME/.bash_login /root/
