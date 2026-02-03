@@ -99,8 +99,9 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
 COPY HOME/.inputrc    /root/
-#COPY HOME/.bash_login /root/
-#COPY HOME/.bashrc     /root/
+
+RUN echo '. .shynur.bashrc' >>|/root/.bashrc
+COPY HOME/.bashrc     /root/.shynur.bashrc
 
 RUN echo 'root: ' | chpasswd
 CMD ["/bin/bash", "-l"]
