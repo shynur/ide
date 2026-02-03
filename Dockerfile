@@ -43,6 +43,9 @@ RUN apt install -y bison
 RUN apt install -y make
 RUN make -j`nproc`
 RUN make install
+WORKDIR /opt/gcc/bin
+RUN bash -c "[ -x gcc ] || ln -s `ls | grep '^gcc' | head -1` gcc"
+RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
 
 
@@ -63,12 +66,14 @@ FROM ssh-server AS dev
 RUN apt install -y emacs-nox bash-completion git iproute2 sudo
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
-ENV PATH="$PATH:/opt/cmake/bin"
+RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
+
 COPY --from=conan-builder /opt/conan/ /opt/conan/
-ENV PATH="$PATH:/opt/conan/bin"
+RUN echo 'export PATH+=:/opt/conan/bin' >>/etc/profile
+
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-ENV CC=/opt/gcc/bin/gcc-16
-ENV CXX=/opt/gcc/bin/g++-16
+RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
+RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 COPY HOME/.inputrc    /root/
 #COPY HOME/.bash_login /root/
