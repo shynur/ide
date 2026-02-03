@@ -130,6 +130,7 @@ RUN cmake --build build -j
 RUN cmake --install build --prefix /opt/spdlog
 
 FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
+COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
 WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
 RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
