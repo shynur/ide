@@ -103,5 +103,6 @@ COPY HOME/.inputrc    /root/
 RUN echo '. ~/.shynur.bashrc' >>/root/.bashrc
 COPY HOME/.bashrc     /root/.shynur.bashrc
 
+RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
 RUN echo 'root: ' | chpasswd
 CMD ["/bin/bash", "-l"]
