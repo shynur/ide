@@ -38,7 +38,7 @@ RUN ./my-configure.bash --prefix=/opt/gcc
 RUN apt install -y bison
 RUN apt install -y make
 RUN make -j`nproc`
-RUN make install
+RUN make -j install
 WORKDIR /opt/gcc/bin
 RUN bash -c "[ -x gcc ] || ln -s `ls | grep '^gcc' | head -1` gcc"
 RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
