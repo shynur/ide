@@ -5,4 +5,4 @@ build: Dockerfile
 	git add .
 	git commit -m ';'
 	git push
-	docker build -t shynur/dev-env-cpp .
+	docker build -t shynur/ide .

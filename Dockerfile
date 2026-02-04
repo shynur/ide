@@ -125,33 +125,28 @@ CMD ["/bin/bash", "-l"]
 
 
 
-# FROM base AS rbk-dev-base
-# RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
-# RUN apt install -y git make
-# COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
-# ENV PATH="$PATH:/opt/cmake/bin"
-# COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-# ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
-# FROM rbk-dev-base AS rbk-dev-spdlog-builder
-# WORKDIR /tmp
-# RUN git clone --single-branch --depth=1 https://github.com/gabime/spdlog.git
-# RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
-# RUN cmake --build build -j `nproc`
-# RUN cmake --install build --prefix /opt/spdlog
 
-# FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
-# COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
-# WORKDIR /tmp
-# RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
-# RUN apt install -y librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
-# RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
-# RUN cmake --build build -j `nproc`
-# RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
-# WORKDIR /tmp/huaweicloud-sdk-cpp-v3
-# RUN bash -c 'for huaweicloud_subd in cce vpc; do cp -r ./$huaweicloud_subd/include/huaweicloud/$huaweicloud_subd /opt/huaweicloud-sdk-cpp-v3/include/huaweicloud/; done'
 
-# FROM dev AS rbk-dev-final
-# RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
-# COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/                 /usr/local/
-# COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /usr/local/
+FROM base AS huaweicloudsdk-builder
+RUN apt install -y git make
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev libspdlog-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
+
+COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
+ENV PATH="$PATH:/opt/cmake/bin"
+COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
+
+WORKDIR /tmp
+RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
+RUN bash -c 'for src in cce/src/v{3,5}; do echo "add_subdirectory($src)" >>huaweicloud-sdk-cpp-v3/CMakeLists.txt; done'
+RUN cmake -S huaweicloud-sdk-cpp-v3 -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE='-DNDEBUG -g0 -O0'
+RUN cmake --build build -j `nproc`
+RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
+
+
+
+
+FROM dev AS rbk-dev-final
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev libspdlog-dev librttr-dev  # huaweicloudsdk 需要
+COPY --from=huaweicloudsdk-dev-sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
