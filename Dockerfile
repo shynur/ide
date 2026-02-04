@@ -49,6 +49,10 @@ RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
 FROM base AS spdlog-builder
 RUN apt install -y git
+COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
+ENV PATH="$PATH:/opt/cmake/bin"
+COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 WORKDIR /tmp
 RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
 RUN bash -c 'cmake -S spdlog -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE="-DNDEBUG -g0 -O0 -w"'
