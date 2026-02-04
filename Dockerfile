@@ -147,6 +147,6 @@ RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 
 
-FROM dev AS rbk-dev-final
+FROM dev AS rbk-dev
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev libspdlog-dev librttr-dev  # huaweicloudsdk 需要
-COPY --from=huaweicloudsdk-dev-sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
+COPY --from=huaweicloudsdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
