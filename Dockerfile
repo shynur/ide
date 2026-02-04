@@ -64,7 +64,7 @@ FROM cmake-user AS spdlog-builder
 RUN apt install -y git
 WORKDIR /tmp
 RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
-RUN bash -c 'cmake -S spdlog -B build    -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS{,_RELEASE}="-DNDEBUG -g0 -O0 -w"'
+RUN bash -c 'cmake -S spdlog -B build -DBUILD_SHARED_LIBS=ON   -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS{,_RELEASE}="-DNDEBUG -g0 -O0 -w"'
 RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/spdlog
 
