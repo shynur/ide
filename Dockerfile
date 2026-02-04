@@ -47,12 +47,21 @@ RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
 
 
-FROM base AS spdlog-builder
-RUN apt install -y git
+FROM base AS cmake-user
+
+RUN apt install -y make
+
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
+
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
+
+
+
+
+FROM cmake-user AS spdlog-builder
+RUN apt install -y git
 WORKDIR /tmp
 RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
 RUN bash -c 'cmake -S spdlog -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE="-DNDEBUG -g0 -O0 -w"'
@@ -143,15 +152,11 @@ CMD ["/bin/bash", "-l"]
 
 
 
-FROM base AS huaweicloudsdk-builder
-RUN apt install -y git make
+FROM cmake-user AS huaweicloudsdk-builder
+
+RUN apt install -y git
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
 COPY --from=spdlog-builder /opt/spdlog/ /usr/local/
-
-COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
-ENV PATH="$PATH:/opt/cmake/bin"
-COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
 WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
