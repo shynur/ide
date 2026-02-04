@@ -84,7 +84,7 @@ FROM ssh-server AS dev
 RUN apt install -y tzdata
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
-RUN apt install -y python3
+RUN apt install -y python3 python3-venv
 
 # 安装 emacs
 RUN apt install -y emacs-nox
