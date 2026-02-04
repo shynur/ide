@@ -39,7 +39,7 @@ RUN ./my-configure.bash --prefix=/opt/gcc
 RUN apt install -y bison
 RUN apt install -y make
 RUN make -j`nproc`
-RUN make -j install
+RUN bash -c 'make -j$[`nproc`+1] install'
 WORKDIR /opt/gcc/bin
 RUN bash -c "[ -x gcc ] || ln -s `ls | grep '^gcc' | head -1` gcc"
 RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
@@ -80,6 +80,18 @@ RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
 
 FROM ssh-server AS dev
 
+# 安装 python
+RUN apt install -y tzdata
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN dpkg-reconfigure --frontend noninteractive tzdata
+RUN apt install -y python3
+
+# 安装 emacs
+RUN apt install -y emacs-nox
+
+# 安装 常用工具
+RUN apt install -y bash-completion git iproute2 sudo make htop wget curl psmisc tree fzf bat
+
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/cmake/bin"
@@ -95,23 +107,15 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
-RUN apt install -y tzdata
-RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN dpkg-reconfigure --frontend noninteractive tzdata
-#RUN apt install -y python3
-
-RUN apt install -y emacs-nox bash-completion git iproute2 sudo make htop wget
-RUN apt install -y curl psmisc tree
-RUN apt install -y fzf
-RUN apt install -y bat
-
+# 一些必要的配置
+RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
 COPY HOME/.inputrc    /root/
-
+#>>> bashrc
 RUN echo '. ~/.shynur.bashrc' >>/root/.bashrc
 COPY HOME/.bashrc     /root/.shynur.bashrc
-
-RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
+#<<<
 RUN echo 'root: ' | chpasswd
+
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
 
@@ -120,33 +124,34 @@ CMD ["/bin/bash", "-l"]
 
 
 
-FROM base AS rbk-dev-base
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
-RUN apt install -y git make
-COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
-ENV PATH="$PATH:/opt/cmake/bin"
-COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
-FROM rbk-dev-base AS rbk-dev-spdlog-builder
-WORKDIR /tmp
-RUN git clone --single-branch --depth=1 https://github.com/gabime/spdlog.git
-RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
-RUN cmake --build build -j `nproc`
-RUN cmake --install build --prefix /opt/spdlog
+# FROM base AS rbk-dev-base
+# RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
+# RUN apt install -y git make
+# COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
+# ENV PATH="$PATH:/opt/cmake/bin"
+# COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+# ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
-FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
-COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
-WORKDIR /tmp
-RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
-RUN apt install -y librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
-RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
-RUN cmake --build build -j `nproc`
-RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
-WORKDIR /tmp/huaweicloud-sdk-cpp-v3
-RUN bash -c 'for huaweicloud_subd in cce vpc; do cp -r ./$huaweicloud_subd/include/huaweicloud/$huaweicloud_subd /opt/huaweicloud-sdk-cpp-v3/include/huaweicloud/; done'
+# FROM rbk-dev-base AS rbk-dev-spdlog-builder
+# WORKDIR /tmp
+# RUN git clone --single-branch --depth=1 https://github.com/gabime/spdlog.git
+# RUN cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -S spdlog -B build
+# RUN cmake --build build -j `nproc`
+# RUN cmake --install build --prefix /opt/spdlog
 
-FROM dev AS rbk-dev-final
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
-COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/                 /usr/local/
-COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /usr/local/
+# FROM rbk-dev-base AS rbk-dev-huaweicloud_sdk-builder
+# COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/          /usr/local/
+# WORKDIR /tmp
+# RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
+# RUN apt install -y librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
+# RUN cmake -S huaweicloud-sdk-cpp-v3 -B build
+# RUN cmake --build build -j `nproc`
+# RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
+# WORKDIR /tmp/huaweicloud-sdk-cpp-v3
+# RUN bash -c 'for huaweicloud_subd in cce vpc; do cp -r ./$huaweicloud_subd/include/huaweicloud/$huaweicloud_subd /opt/huaweicloud-sdk-cpp-v3/include/huaweicloud/; done'
+
+# FROM dev AS rbk-dev-final
+# RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev
+# COPY --from=rbk-dev-spdlog-builder          /opt/spdlog/                 /usr/local/
+# COPY --from=rbk-dev-huaweicloud_sdk-builder /opt/huaweicloud-sdk-cpp-v3/ /usr/local/
