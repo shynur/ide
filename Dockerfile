@@ -51,7 +51,7 @@ FROM base AS spdlog-builder
 RUN apt install -y git
 WORKDIR /tmp
 RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
-RUN cmake -S spdlog -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE='-DNDEBUG -g0 -O0 -w'
+RUN bash -c 'cmake -S spdlog -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE="-DNDEBUG -g0 -O0 -w"'
 RUN cmake --build build
 RUN cmake --install build --prefix /opt/spdlog
 
@@ -152,7 +152,7 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/huaweicloud/huaweicloud-sdk-cpp-v3.git
 RUN bash -c 'echo >>huaweicloud-sdk-cpp-v3/CMakeLists.txt; for src in cce/src/v{3,5}; do echo "add_subdirectory($src)" >>huaweicloud-sdk-cpp-v3/CMakeLists.txt; done'
-RUN cmake -S huaweicloud-sdk-cpp-v3 -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE='-DNDEBUG -g0 -O0 -w'
+RUN bash -c 'cmake -S huaweicloud-sdk-cpp-v3 -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE="-DNDEBUG -g0 -O0 -w"'
 RUN cmake --build build -j `nproc`
 RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
