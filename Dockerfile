@@ -49,7 +49,7 @@ RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
 FROM base AS cmake-user
 
-RUN apt install -y binutils make
+RUN apt install -y libc6-dev binutils make
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
