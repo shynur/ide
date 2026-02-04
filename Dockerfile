@@ -47,6 +47,17 @@ RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
 
 
+FROM base AS spdlog-builder
+RUN apt install -y git
+WORKDIR /tmp
+RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
+RUN cmake -S spdlog -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS_RELEASE='-DNDEBUG -g0 -O0 -w'
+RUN cmake --build build
+RUN cmake --install build --prefix /opt/spdlog
+
+
+
+
 FROM base AS ssh-server
 RUN apt install -y openssh-server
 EXPOSE 22
@@ -130,7 +141,8 @@ CMD ["/bin/bash", "-l"]
 
 FROM base AS huaweicloudsdk-builder
 RUN apt install -y git make
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev libspdlog-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
+COPY --from=spdlog-builder /opt/spdlog/ /usr/local/
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
@@ -148,5 +160,6 @@ RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 
 FROM dev AS rbk-dev
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev libspdlog-dev librttr-dev  # huaweicloudsdk 需要
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # huaweicloudsdk 需要
+COPY --from=spdlog-builder /opt/spdlog/ /opt/spdlog/
 COPY --from=huaweicloudsdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
