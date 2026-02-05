@@ -17,7 +17,7 @@ RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --p
 FROM base AS conan-builder
 RUN apt install -y wget
 WORKDIR /tmp
-RUN bash -c 'wget https://github.com/conan-io/conan/releases/download/2.25.1/conan-2.25.1-linux-$HOSTTYPE.tgz'
+RUN bash -c 'JFROG_CONAN_VERSION=2.25.2; wget https://github.com/conan-io/conan/releases/download/$JFROG_CONAN_VERSION/conan-$JFROG_CONAN_VERSION-linux-$HOSTTYPE.tgz'
 RUN mkdir -p /opt/conan; bash -c 'tar -xf ./conan-*-$HOSTTYPE.tgz -C /opt/conan'
 
 
