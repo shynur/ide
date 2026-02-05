@@ -152,7 +152,7 @@ CMD ["/bin/bash", "-l"]
 
 
 #FROM cmake-user AS huaweicloudsdk-builder
-FROM ssh-server AS huaweicloudsdk-builder
+FROM dev AS huaweicloudsdk-builder
 
 RUN apt install -y git
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
