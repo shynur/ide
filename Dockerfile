@@ -9,6 +9,7 @@ FROM base AS cmake-builder
 RUN apt install -y wget
 WORKDIR /tmp
 RUN bash -c 'wget https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-$HOSTTYPE.sh'
+#                                                                     ^~~~~       ^~~~~ TODO: 将 版本号 用 CMAKE_VERSION 变量表示
 RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
 
 
