@@ -151,8 +151,7 @@ CMD ["/bin/bash", "-l"]
 
 
 
-#FROM cmake-user AS huaweicloudsdk-builder
-FROM dev AS huaweicloudsdk-builder
+FROM cmake-user AS huaweicloudsdk-builder
 
 RUN apt install -y git
 RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
@@ -161,13 +160,13 @@ COPY --from=spdlog-builder /opt/spdlog/ /usr/local/
 WORKDIR /tmp
 RUN git clone --single-branch --depth=1 https://github.com/shynur/huaweicloud-sdk-cpp-v3.git
 RUN bash -c 'cmake -S huaweicloud-sdk-cpp-v3 -B build        -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS{,_RELEASE}="-DNDEBUG -g0 -O0 -w"'
-# RUN cmake --build build -j `nproc`
-# RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
+RUN cmake --build build -j `nproc`
+RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
 
 
 
 
-# FROM dev AS rbk-dev
-# RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # huaweicloudsdk 需要
-# COPY --from=spdlog-builder /opt/spdlog/ /opt/spdlog/
-# COPY --from=huaweicloudsdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
+FROM dev AS rbk-dev
+RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # huaweicloudsdk 需要
+COPY --from=spdlog-builder /opt/spdlog/ /opt/spdlog/
+COPY --from=huaweicloudsdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
