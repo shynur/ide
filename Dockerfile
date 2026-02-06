@@ -8,8 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 FROM base AS cmake-builder
 RUN apt install -y wget
 WORKDIR /tmp
-RUN bash -c 'wget https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-$HOSTTYPE.sh'
-#                                                                     ^~~~~       ^~~~~ TODO: 将 版本号 用 CMAKE_VERSION 变量表示
+RUN bash -c 'CMAKE_VERSION=4.2.3; wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh'
 RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
 
 
@@ -80,6 +79,7 @@ RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
 RUN echo >>/etc/ssh/sshd_config 'Banner none'
 RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
+RUN echo 'root: ' | chpasswd
 
 
 
@@ -103,13 +103,27 @@ RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
 
 
 
+FROM base AS homedir-builder
+
+RUN bash -c 'echo >|~/.bash_profile'
+RUN echo 'export LANG=en_US.UTF-8' >>/root/.bash_profile
+
+COPY HOME/.inputrc /root/
+
+COPY HOME/.bashrc  /root/
+
+COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
+
+
+
+
 FROM ssh-server AS dev
 
 # 安装 python
 RUN apt install -y tzdata
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
-RUN apt install -y python3 python3-venv
+RUN apt install -y python3
 
 # 安装 emacs
 RUN apt install -y emacs-nox
@@ -130,16 +144,7 @@ RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
-COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
-
-# 一些必要的配置
-RUN echo 'export LANG=en_US.UTF-8' >>/etc/profile
-COPY HOME/.inputrc    /root/
-#>>> bashrc
-RUN echo '. ~/.shynur.bashrc' >>/root/.bashrc
-COPY HOME/.bashrc     /root/.shynur.bashrc
-#<<<
-RUN echo 'root: ' | chpasswd
+COPY --from=homedir-builder /root/ /root/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
