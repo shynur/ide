@@ -99,7 +99,7 @@ RUN bash -c "emacs -x <(echo \"(package-install 'sed-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'typescript-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'web-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
-
+RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives '(\\\"melpa-stable\\\" . \\\"https://stable.melpa.org/packages/\\\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)\")"
 
 
 
