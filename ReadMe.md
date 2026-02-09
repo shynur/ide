@@ -2,13 +2,29 @@
 ## 终端工具
 ### 模糊搜索
 
+按下 <kbd>Ctrl</kbd>-<kbd>t</kbd>:
+
+<img width="2536" height="1263" alt="Image" src="https://github.com/user-attachments/assets/29403b51-b9b3-41c3-a057-a1ac77130488" />
+
 ### 提示符
 
-#### Git Tag/Branch 提示
+<img width="2529" height="243" alt="Image" src="https://github.com/user-attachments/assets/6710b3b5-ab44-45b2-b728-2086ae133719" />
 
-### 彩色补全
+- 上一条命令的退出码
+- CPU 负载: 上限 = 100% x CPU 核心数
+- 内存 与 swap 占用
+- 当前 session 下流逝的时间
+- CPU 运行在 user/kernel-mode 的时间: 递归计算 subprocess
+- 在某些目录下显示当前目录下所有文件的磁盘占用
+- 当前是 bash 执行的第几条命令
+- 当前 Git 仓库的 tag/branch
 
+### 花哨的补全
 
+<img width="2280" height="184" alt="Image" src="https://github.com/user-attachments/assets/1868e98d-a212-4e54-8622-f9044071b7be" />
+
+- 显示彩色
+- 根据文件类型显示后缀
 
 ## 登录
 ### 直接运行
