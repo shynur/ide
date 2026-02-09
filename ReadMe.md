@@ -11,6 +11,7 @@
 <img width="2529" height="243" alt="Image" src="https://github.com/user-attachments/assets/6710b3b5-ab44-45b2-b728-2086ae133719" />
 
 - 上一条命令的退出码
+- 后台任务的数量
 - CPU 负载: 上限 = 100% x CPU 核心数
 - 内存 与 swap 占用
 - 当前 session 下流逝的时间
@@ -47,7 +48,7 @@ shynur/ide `which sshd` -D
 如果是同主机, 可以用
 
 ```bash
-ssh -p 22222 root@localhost
+ssh -p 22222 root@localhost  # 再敲一个空格+回车
 ```
 
 或者从外部 SSH 进去.
