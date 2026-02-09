@@ -105,12 +105,10 @@ RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives
 
 FROM base AS homedir-builder
 
-RUN bash -c 'echo >|~/.bash_profile'
-RUN echo 'export LANG=en_US.UTF-8' >>/root/.bash_profile
-
 COPY HOME/.inputrc /root/
 
-COPY HOME/.bashrc  /root/
+COPY HOME/.bash_profile /root/
+COPY HOME/.bashrc       /root/
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
