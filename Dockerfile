@@ -57,28 +57,6 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
 # --------------------------------
 
-FROM base AS ssh-server
-
-RUN apt install -y openssh-server
-
-EXPOSE 22
-RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
-RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
-RUN echo >>/etc/ssh/sshd_config 'Banner none'
-
-RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
-RUN mkdir -p /var/run/sshd
-
-RUN echo 'root: ' | chpasswd
-
-# 都 SSH 登录了, 可不得支持一下补全吗.
-RUN apt install -y bash-completion
-
-# 安装 ~/
-COPY --from=homedir-builder /root/ /root/
-
-# --------------------------------
-
 FROM base AS dotemacs-builder
 RUN apt install -y emacs-nox
 
@@ -106,6 +84,28 @@ COPY HOME/.bash_profile /root/
 COPY HOME/.bashrc       /root/
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
+
+# --------------------------------
+
+FROM base AS ssh-server
+
+RUN apt install -y openssh-server
+
+EXPOSE 22
+RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
+RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
+RUN echo >>/etc/ssh/sshd_config 'Banner none'
+
+RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
+RUN mkdir -p /var/run/sshd
+
+RUN echo 'root: ' | chpasswd
+
+# 都 SSH 登录了, 可不得支持一下补全吗.
+RUN apt install -y bash-completion
+
+# 安装 ~/
+COPY --from=homedir-builder /root/ /root/
 
 # --------------------------------
 
