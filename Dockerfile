@@ -2,8 +2,7 @@ FROM ubuntu AS base
 RUN apt update
 ENV DEBIAN_FRONTEND=noninteractive
 
-
-
+# --------------------------------
 
 FROM base AS cmake-builder
 RUN apt install -y wget
@@ -11,17 +10,7 @@ WORKDIR /tmp
 RUN bash -c 'CMAKE_VERSION=4.2.3; wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh'
 RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
 
-
-
-
-FROM base AS conan-builder
-RUN apt install -y wget
-WORKDIR /tmp
-RUN bash -c 'JFROG_CONAN_VERSION=2.25.2; wget https://github.com/conan-io/conan/releases/download/$JFROG_CONAN_VERSION/conan-$JFROG_CONAN_VERSION-linux-$HOSTTYPE.tgz'
-RUN mkdir -p /opt/conan; bash -c 'tar -xf ./conan-*-$HOSTTYPE.tgz -C /opt/conan'
-
-
-
+# --------------------------------
 
 FROM base AS gcc-builder
 RUN apt install -y g++ wget
@@ -44,8 +33,7 @@ WORKDIR /opt/gcc/bin
 RUN bash -c "[ -x gcc ] || ln -s `ls | grep '^gcc' | head -1` gcc"
 RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
 
-
-
+# --------------------------------
 
 FROM base AS cmake-user
 
@@ -57,32 +45,39 @@ ENV PATH="$PATH:/opt/cmake/bin"
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
+# --------------------------------
 
+#FROM cmake-user AS <SDK>-builder
+#RUN apt install -y git
+#WORKDIR /tmp
+#RUN git clone --single-branch --branch=<TAG> --depth=1 https://github.com/<USERNAME>/<REPO>.git
+#RUN bash -c 'cmake -S <REPO> -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug'
+#RUN cmake --build build -j `nproc`
+#RUN cmake --install build --prefix /opt/<REPO>
 
-
-FROM cmake-user AS spdlog-builder
-RUN apt install -y git
-WORKDIR /tmp
-RUN git clone --single-branch --branch=v1.17.0 --depth=1 https://github.com/gabime/spdlog.git
-RUN bash -c 'cmake -S spdlog -B build -DBUILD_SHARED_LIBS=ON -DSPDLOG_BUILD_EXAMPLE=OFF    -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS{,_RELEASE}="-DNDEBUG -g0 -O0 -w"'
-RUN cmake --build build -j `nproc`
-RUN cmake --install build --prefix /opt/spdlog
-
-
-
+# --------------------------------
 
 FROM base AS ssh-server
+
 RUN apt install -y openssh-server
+
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
 RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
 RUN echo >>/etc/ssh/sshd_config 'Banner none'
+
 RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
+
 RUN echo 'root: ' | chpasswd
 
+# 都 SSH 登录了, 可不得支持一下补全吗.
+RUN apt install -y bash-completion
 
+# 安装 ~/
+COPY --from=homedir-builder /root/ /root/
 
+# --------------------------------
 
 FROM base AS dotemacs-builder
 RUN apt install -y emacs-nox
@@ -101,7 +96,7 @@ RUN bash -c "emacs -x <(echo \"(package-install 'web-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
 RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives '(\\\"melpa-stable\\\" . \\\"https://stable.melpa.org/packages/\\\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)\")"
 
-
+# --------------------------------
 
 FROM base AS homedir-builder
 
@@ -112,65 +107,33 @@ COPY HOME/.bashrc       /root/
 
 COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
 
-
-
+# --------------------------------
 
 FROM ssh-server AS dev
 
-# 安装 python
+# 安装 python, venv, pipx
 RUN apt install -y tzdata
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
-RUN apt install -y python3
+RUN apt install -y python3 python3-venv pipx
+RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
 
 # 安装 emacs
 RUN apt install -y emacs-nox
 
 # 安装 常用工具
-RUN apt install -y bash-completion git iproute2 sudo make htop wget curl psmisc tree fzf bat
+RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat
 
+# 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/cmake/bin"
 
-COPY --from=conan-builder /opt/conan/ /opt/conan/
-RUN echo 'export PATH+=:/opt/conan/bin' >>/etc/profile
-ENV PATH="$PATH:/opt/conan/bin"
-
+# 安装 GCC
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
-COPY --from=homedir-builder /root/ /root/
-
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
-
-
-
-
-
-
-
-
-
-FROM cmake-user AS huaweicloudsdk-builder
-
-RUN apt install -y git
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # 我服了 huawei 这个逆天 README 里居然没提要安装 rttr
-COPY --from=spdlog-builder /opt/spdlog/ /usr/local/
-
-WORKDIR /tmp
-RUN git clone --single-branch --depth=1 https://github.com/shynur/huaweicloud-sdk-cpp-v3.git
-RUN bash -c 'cmake -S huaweicloud-sdk-cpp-v3 -B build        -DCMAKE_BUILD_TYPE=Release -DCMAKE_{C,CXX}_FLAGS{,_RELEASE}="-DNDEBUG -g0 -O0 -w"'
-RUN cmake --build build -j `nproc`
-RUN cmake --install build --prefix /opt/huaweicloud-sdk-cpp-v3
-
-
-
-
-FROM dev AS rbk-dev
-RUN apt install -y libcurl4-openssl-dev libboost-all-dev libssl-dev libcpprest-dev librttr-dev  # huaweicloudsdk 需要
-COPY --from=spdlog-builder /opt/spdlog/ /opt/spdlog/
-COPY --from=huaweicloudsdk-builder /opt/huaweicloud-sdk-cpp-v3/ /opt/huaweicloud-sdk-cpp-v3/
