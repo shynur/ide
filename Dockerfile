@@ -118,7 +118,7 @@ RUN dpkg-reconfigure --frontend noninteractive tzdata
 RUN apt install -y python3 python3-venv pipx
 RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
 
-# 安装 emacs
+# 安装 Emacs
 RUN apt install -y emacs-nox
 
 # 安装 常用工具
