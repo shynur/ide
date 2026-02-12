@@ -58,7 +58,10 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 # --------------------------------
 
 FROM base AS dotemacs-builder
+
 RUN apt install -y emacs-nox
+RUN bash -c 'mkdir -p ~/.config/emacs'
+RUN bash -c 'touch ~/.config/emacs/init.el'
 
 RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
 RUN bash -c "emacs -x <(echo \"(package-install 'csv-mode)\")"
@@ -78,12 +81,9 @@ RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives
 
 FROM base AS homedir-builder
 
-COPY HOME/.inputrc /root/
+COPY HOME/ /root/
 
-COPY HOME/.bash_profile /root/
-COPY HOME/.bashrc       /root/
-
-COPY --from=dotemacs-builder /root/.emacs.d/ /root/.emacs.d/
+COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
 # --------------------------------
 
@@ -137,3 +137,18 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
+
+# ---------------------------------
+
+FROM dev AS rbk-cacher
+WORKDIR /tmp/huaweicloudsdkall
+
+RUN python3 -m venv .venv
+RUN bash -c '. .venv/bin/active; pip install huaweicloudsdkall'
+
+# .................................
+
+FROM dev AS rbk-dev
+
+COPY --from=rbk-cacher /root/.cache/pip/ /root/.cache/pip/
+
