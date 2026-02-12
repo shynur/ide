@@ -65,7 +65,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260206 (experimental) (GCC)
+gcc version 16.0.1 20260212 (experimental) (GCC)
 ```
 
 ```bash
@@ -80,11 +80,7 @@ cmake version 4.2.3
 
 ### 预安装的基础库
 
-```bash
-$ ls /opt
-huaweicloud-sdk-cpp-v3
-spdlog
-```
+TODO: 安装 FastDDS.
 
 ____________________________
 
