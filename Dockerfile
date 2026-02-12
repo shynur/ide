@@ -144,7 +144,7 @@ FROM dev AS rbk-cacher
 WORKDIR /tmp/huaweicloudsdkall
 
 RUN python3 -m venv .venv
-RUN bash -c '. .venv/bin/active; pip install huaweicloudsdkall'
+RUN bash -c '. .venv/bin/activate; pip install huaweicloudsdkall'
 
 # .................................
 
