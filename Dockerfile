@@ -81,7 +81,10 @@ RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives
 
 FROM base AS homedir-builder
 
-COPY HOME/ /root/
+COPY HOME/.config/      /root/.config/
+COPY HOME/.bash_profile /root/
+COPY HOME/.bashrc       /root/
+COPY HOME/.inputrc      /root/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
