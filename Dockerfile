@@ -85,6 +85,7 @@ COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
 COPY HOME/.bashrc       /root/
 COPY HOME/.inputrc      /root/
+COPY HOME/.conan2/      /root/.conan2/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
