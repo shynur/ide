@@ -1,4 +1,4 @@
-name: Update Submodule HOME
+name: Update Submodule make-gcc/src
 on:
   schedule:
     - cron: '0 */12 * * *'
