@@ -119,7 +119,6 @@ RUN apt install -y tzdata
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 RUN apt install -y python3 python3-venv pipx
-RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
 
 # 安装 Emacs
 RUN apt install -y emacs-nox
@@ -137,6 +136,11 @@ COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
+
+# 安装 JFrog Conan
+RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
+RUN bash -c 'PATH+=:~/.local/bin conan profile detect --force'
+RUN bash -c 'sed -i "s/^build_type=Release\$/build_type=Debug/" ~/.conan2/profiles/default'
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
