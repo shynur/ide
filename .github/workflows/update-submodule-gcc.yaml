@@ -17,7 +17,7 @@ jobs:
       - name: Update GCC from Upstream
         run: |
           git submodule update --init --remote --depth=1 -- make-gcc/src
-      - name: Commit & Push If Changed
+      - name: Commit & Push if Changed
         run: |
           if git diff --quiet -- make-gcc/src; then
             echo 'GCC (make-gcc/src) is already up to date'
