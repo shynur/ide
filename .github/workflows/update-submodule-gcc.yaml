@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write
 jobs:
-  update-home:
+  update-gcc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -14,7 +14,7 @@ jobs:
         with:
           submodules: false
           fetch-depth: 1
-      - name: Update HOME From Upstream
+      - name: Update GCC from Upstream
         run: |
           git submodule update --init --remote --depth=1 -- make-gcc/src
       - name: Commit & Push If Changed
