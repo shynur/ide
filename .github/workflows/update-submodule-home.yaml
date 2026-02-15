@@ -1,0 +1,30 @@
+name: Update Submodule HOME
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-home:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          fetch-depth: 1
+      - name: Update HOME From Upstream
+        run: |
+          git submodule update --init --remote --depth=1 -- HOME
+      - name: Commit & Push If Changed
+        run: |
+          if git diff --quiet -- HOME; then
+            echo 'HOME is already up to date'
+            exit
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add HOME
+          git commit -m '; chore: update submodule HOME'
+          git push origin 'HEAD:${{ github.ref_name }}'
