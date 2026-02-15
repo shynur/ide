@@ -14,10 +14,10 @@ jobs:
         with:
           submodules: false
           fetch-depth: 1
-      - name: Update HOME From Upstream
+      - name: Update HOME from Upstream
         run: |
           git submodule update --init --remote --depth=1 -- HOME
-      - name: Commit & Push If Changed
+      - name: Commit & Push if Changed
         run: |
           if git diff --quiet -- HOME; then
             echo 'HOME is already up to date'
