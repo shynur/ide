@@ -89,6 +89,16 @@ COPY HOME/.conan2/      /root/.conan2/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
+# ---------------------------------
+
+FROM base AS etcdir-builder
+RUN apt install -y git
+WORKDIR /tmp
+
+RUN mkdir -p /etc/bash_completion.d
+RUN git clone --depth=1 https://gitlab.com/akim.saidani/conan-bashcompletion.git
+RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d/
+
 # --------------------------------
 
 FROM base AS ssh-server
@@ -107,6 +117,8 @@ RUN echo 'root: ' | chpasswd
 
 # 都 SSH 登录了, 可不得支持一下补全吗.
 RUN apt install -y bash-completion
+
+COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 
 # 安装 ~/
 COPY --from=homedir-builder /root/ /root/
