@@ -60,22 +60,28 @@ ssh -p 22222 root@localhost  # 再敲一个空格+回车
 
 ### 前沿的工具链
 
+[GCC](https://gcc.gnu.org/gcc-16/changes.html#cxx):
+
 ```bash
 $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260212 (experimental) (GCC)
+gcc version 16.0.1 20260215 (experimental) (GCC)
 ```
 
-```bash
-$ conan -v
-Conan version 2.25.2
-```
+[CMake](https://github.com/Kitware/CMake):
 
 ```bash
 $ cmake --version
 cmake version 4.2.3
+```
+
+[JFrog Conan](https://github.com/conan-io/conan):
+
+```bash
+$ conan -v
+Conan version 2.25.2
 ```
 
 ### 预安装的基础库
