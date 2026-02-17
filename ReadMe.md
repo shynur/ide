@@ -34,7 +34,10 @@
 ### 直接运行
 
 ```bash
-docker run -v ~/.git-credentials:/root/.git-credentials:ro -v ~/.gitconfig:/root/.gitconfig:ro --rm -it shynur/ide
+docker run --rm -it                              \
+-v ~/.git-credentials:/root/.git-credentials:ro  \
+-v ~/.conan2/p/:/root/.conan2/p/                 \
+shynur/ide
 ```
 
 ### SSH
@@ -44,8 +47,11 @@ docker run -v ~/.git-credentials:/root/.git-credentials:ro -v ~/.gitconfig:/root
 在任意 shell session 执行以下命令 (之后可以关闭该 session):
 
 ```bash
-docker run -d -p 22222:22 -v ~/.git-credentials:/root/.git-credentials:ro -v ~/.gitconfig:/root/.gitconfig:ro --rm \
-shynur/ide `which sshd` -D
+docker run --rm -d                               \
+-p 22222:22                                      \
+-v ~/.git-credentials:/root/.git-credentials:ro  \
+-v ~/.conan2/p/:/root/.conan2/p/                 \
+shynur/ide /usr/sbin/sshd -D
 ```
 
 如果是同主机, 可以用
@@ -67,7 +73,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260215 (experimental) (GCC)
+gcc version 16.0.1 20260217 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
@@ -86,7 +92,8 @@ Conan version 2.25.2
 
 ### 预安装的基础库
 
-TODO: 安装 FastDDS.
+TODO:
+- [ ] 安装 FastDDS.
 
 ____________________________
 
