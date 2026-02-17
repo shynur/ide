@@ -9,18 +9,17 @@ jobs:
   update-home:
     runs-on: ubuntu-latest
     steps:
-      # Use PAT instead of default GITHUB_TOKEN to trigger docker-build workflow on push.
-      # GitHub Actions doesn't trigger workflows when using the default GITHUB_TOKEN.
-      # Required PAT permissions: contents: write
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           submodules: false
           fetch-depth: 1
-          token: ${{ secrets.PAT }}
       - name: Update HOME from Upstream
         run: |
           git submodule update --init --remote --depth=1 -- HOME
+      # Use PAT instead of default GITHUB_TOKEN to trigger docker-build workflow on push.
+      # GitHub Actions doesn't trigger workflows when using the default GITHUB_TOKEN.
+      # Required PAT permissions: contents: write
       - name: Commit & Push if Changed
         run: |
           if git diff --quiet -- HOME; then
@@ -31,4 +30,4 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add HOME
           git commit -m '; chore: update submodule HOME'
-          git push origin 'HEAD:${{ github.ref_name }}'
+          git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} 'HEAD:${{ github.ref_name }}'
