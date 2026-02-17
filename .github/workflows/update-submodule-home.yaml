@@ -12,6 +12,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.PAT }}
           submodules: false
           fetch-depth: 1
       - name: Update HOME from Upstream
