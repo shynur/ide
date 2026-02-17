@@ -11,6 +11,7 @@ jobs:
     steps:
       # Use PAT instead of default GITHUB_TOKEN to trigger docker-build workflow on push.
       # GitHub Actions doesn't trigger workflows when using the default GITHUB_TOKEN.
+      # Required PAT permissions: contents: write
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
