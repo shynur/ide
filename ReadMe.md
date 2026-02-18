@@ -62,8 +62,12 @@ ssh -p 22222 root@localhost  # 再敲一个空格+回车
 
 或者从外部 SSH 进去.
 
-## 开发工具
+### systemd
 
+开机时自动更新 image 并启动它作为 SSH server.
+See [`shynur-ide.service`](./shynur-ide.service).
+
+## 开发工具
 ### 前沿的工具链
 
 [GCC](https://gcc.gnu.org/gcc-16/changes.html#cxx):
