@@ -37,7 +37,7 @@
 docker run --rm -it                              \
 -v ~/.git-credentials:/root/.git-credentials:ro  \
 -v ~/.conan2/p/:/root/.conan2/p/                 \
-shynur/ide
+docker.cnb.cool/shynur/ide
 ```
 
 ### SSH
@@ -51,7 +51,7 @@ docker run --rm -d                               \
 -p 22222:22                                      \
 -v ~/.git-credentials:/root/.git-credentials:ro  \
 -v ~/.conan2/p/:/root/.conan2/p/                 \
-shynur/ide /usr/sbin/sshd -D
+docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
 ```
 
 如果是同主机, 可以用
@@ -98,6 +98,7 @@ Conan version 2.25.2
 
 TODO:
 - [ ] 安装 FastDDS.
+- [ ] 安装 Perfetto.
 
 ____________________________
 
