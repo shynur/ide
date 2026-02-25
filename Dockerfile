@@ -157,10 +157,11 @@ RUN bash -c 'sed -i "s/^build_type=Release\$/build_type=Debug/" ~/.conan2/profil
 
 # 安装 Node.js
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-RUN bash -c '. ~/.nvm/nvm.sh; nvm install 24'
-RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code'  # 安装 Claude Code CLI
-RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @openai/codex'              # 安装 GPT Codex CLI
-RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @google/gemini-cli'         # 安装 Gemini CLI
+RUN bash -c '. ~/.nvm/nvm.sh;                                 nvm install 24'
+RUN bash -c '. ~/.nvm/nvm.sh;                                 npm install -g @anthropic-ai/claude-code'  # 安装 Claude Code CLI
+RUN bash -c '. ~/.nvm/nvm.sh;                                 npm install -g @openai/codex'              # 安装 GPT Codex CLI
+RUN bash -c '. ~/.nvm/nvm.sh;                                 npm install -g @google/gemini-cli'         # 安装 Gemini CLI
+RUN bash -c '. ~/.nvm/nvm.sh; npm_config_ignore_scripts=false npm install -g @github/copilot'            # 安装 GitHub Copilot CLI
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
