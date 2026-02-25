@@ -34,10 +34,12 @@
 ### 直接运行
 
 ```bash
-docker run --rm -it                              \
--v ~/.git-credentials:/root/.git-credentials:ro  \
--v ~/.conan2/p/:/root/.conan2/p/                 \
-docker.cnb.cool/shynur/ide
+docker run  \
+  --rm -it                                         \
+  -v ~/.git-credentials:/root/.git-credentials:ro  \
+  -v /etc/shynur-ide/:/etc/shynur-ide/:ro          \
+  -v ~/.conan2/p/:/root/.conan2/p/                 \
+  docker.cnb.cool/shynur/ide
 ```
 
 ### SSH
@@ -47,11 +49,13 @@ docker.cnb.cool/shynur/ide
 在任意 shell session 执行以下命令 (之后可以关闭该 session):
 
 ```bash
-docker run --rm -d                               \
--p 22222:22                                      \
--v ~/.git-credentials:/root/.git-credentials:ro  \
--v ~/.conan2/p/:/root/.conan2/p/                 \
-docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
+docker run  \
+  --rm -d                                          \
+  -p 22222:22                                      \
+  -v ~/.git-credentials:/root/.git-credentials:ro  \
+  -v ~/.conan2/p/:/root/.conan2/p/                 \
+  -v /etc/shynur-ide/:/etc/shynur-ide/:ro          \
+  docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
 ```
 
 如果是同主机, 可以用
@@ -77,7 +81,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260217 (experimental) (GCC)
+gcc version 16.0.1 20260225 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
@@ -99,6 +103,27 @@ Conan version 2.25.2
 TODO:
 - [ ] 安装 FastDDS.
 - [ ] 安装 Perfetto.
+
+## AI Coder CLI
+
+内置 Codex / Copilot / Gemini / Claude CLI.
+
+按照如下格式:
+
+```json
+{
+  "ANTHROPIC_API_KEY": "<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>",
+  "OPENAI_API_KEY": "",
+  "GEMINI_API_KEY": "",
+  "GITHUB_TOKEN": ""
+}
+```
+
+映射到容器内的 `/etc/shynur-ide/api-key.json` 即可自动完成注册.
+
+> [!NOTE]
+> 密钥并未存储在环境变量中.
+> 仅当调用指定 AI Coder CLI 时会针对该进程设置密钥.
 
 ____________________________
 

@@ -81,15 +81,16 @@ RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives
 
 FROM base AS homedir-builder
 
-COPY HOME/.config/                    /root/.config/
-COPY HOME/.bash_profile               /root/
-COPY HOME/.bashrc                     /root/
-COPY HOME/.inputrc                    /root/
-COPY HOME/.conan2/                    /root/.conan2/
-
-COPY HOME/.local/bin/set-secret-tokens.bash  /root/.local/bin/
+COPY HOME/.config/      /root/.config/
+COPY HOME/.bash_profile /root/
+COPY HOME/.bashrc       /root/
+COPY HOME/.inputrc      /root/
+COPY HOME/.conan2/      /root/.conan2/
+COPY HOME/.local/bin/   /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
+
+RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/api-key.json' >>/root/.bashrc
 
 # ---------------------------------
 
