@@ -81,11 +81,13 @@ RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives
 
 FROM base AS homedir-builder
 
-COPY HOME/.config/      /root/.config/
-COPY HOME/.bash_profile /root/
-COPY HOME/.bashrc       /root/
-COPY HOME/.inputrc      /root/
-COPY HOME/.conan2/      /root/.conan2/
+COPY HOME/.config/                    /root/.config/
+COPY HOME/.bash_profile               /root/
+COPY HOME/.bashrc                     /root/
+COPY HOME/.inputrc                    /root/
+COPY HOME/.conan2/                    /root/.conan2/
+
+COPY HOME/.local/bin/set-secret-tokens.bash  /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
@@ -158,8 +160,7 @@ RUN bash -c 'sed -i "s/^build_type=Release\$/build_type=Debug/" ~/.conan2/profil
 # 安装 Node.js
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 RUN bash -c '. ~/.nvm/nvm.sh; nvm install 24'
-RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot'  # 安装 AI code CLI
-RUN echo 'export ANTHROPIC_BASE_URL=https://api.aicodemirror.com/api/claudecode' >>/etc/profile
+RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot'
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
