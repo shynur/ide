@@ -137,7 +137,7 @@ RUN apt install -y python3 python3-venv pipx
 RUN apt install -y emacs-nox
 
 # 安装 常用工具
-RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat
+RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat curl
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
@@ -154,6 +154,13 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
 RUN bash -c 'PATH+=:~/.local/bin conan profile detect --force'
 RUN bash -c 'sed -i "s/^build_type=Release\$/build_type=Debug/" ~/.conan2/profiles/default'
+
+# 安装 Node.js
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+RUN bash -c '. ~/.nvm/nvm.sh; nvm install 24'
+RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code'  # 安装 Claude Code CLI
+RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @openai/codex'              # 安装 GPT Codex CLI
+RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @google/gemini-cli'         # 安装 Gemini CLI
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
