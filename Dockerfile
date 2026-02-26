@@ -22,7 +22,7 @@ RUN ./contrib/download_prerequisites
 
 COPY make-gcc/build/ /tmp/make-gcc/build/
 WORKDIR /tmp/make-gcc/build
-RUN ./my-configure.bash --prefix=/opt/gcc
+RUN ./my-configure.bash --prefix=/opt/gcc >/dev/null
 RUN make -j`nproc` >/dev/null
 RUN make -j$[`nproc`+1] install >/dev/null
 WORKDIR /opt/gcc/bin
