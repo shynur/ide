@@ -1,21 +1,21 @@
 FROM ubuntu AS base
+SHELL ["/bin/bash", "-c"]
 RUN apt update
 ENV DEBIAN_FRONTEND=noninteractive
 
 # --------------------------------
 
 FROM base AS cmake-builder
-RUN apt install -y wget
+RUN apt install -y wget git
 WORKDIR /tmp
-RUN bash -c 'CMAKE_VERSION=4.2.3; wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh'
-RUN mkdir -p /opt/cmake; bash -c 'bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir'
+RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git  'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'
+// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
+RUN mkdir -p /opt/cmake; bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
 
 # --------------------------------
 
 FROM base AS gcc-builder
-RUN apt install -y g++ wget
-RUN apt install -y bzip2
-RUN apt install -y file
+RUN apt install -y g++ wget bzip2 file bison make flex libfl-dev
 
 COPY make-gcc/src/ /tmp/make-gcc/src/
 WORKDIR /tmp/make-gcc/src
@@ -23,15 +23,14 @@ RUN ./contrib/download_prerequisites
 
 COPY make-gcc/build/ /tmp/make-gcc/build/
 WORKDIR /tmp/make-gcc/build
-RUN apt install -y flex libfl-dev
 RUN ./my-configure.bash --prefix=/opt/gcc
-RUN apt install -y bison
-RUN apt install -y make
 RUN make -j`nproc`
-RUN bash -c 'make -j$[`nproc`+1] install'
+RUN make -j$[`nproc`+1] install
 WORKDIR /opt/gcc/bin
-RUN bash -c "[ -x gcc ] || ln -s `ls | grep '^gcc' | head -1` gcc"
-RUN bash -c "[ -x g++ ] || ln -s `ls | grep '^g++' | head -1` g++"
+RUN if ! [ -x gcc ]; then ln -s `ls | grep '^gcc' | head -1` gcc; fi
+RUN if ! [ -x g++ ]; then ln -s `ls | grep '^g++' | head -1` g++; fi
+RUN ln -s gcc cc
+RUN ln -s g++ c++
 
 # --------------------------------
 
@@ -48,34 +47,37 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 # --------------------------------
 
 #FROM cmake-user AS <SDK>-builder
+#ARG USER=
+#ARG REPO=
+#ARG TAG=
 #RUN apt install -y git
 #WORKDIR /tmp
-#RUN git clone --single-branch --branch=<TAG> --depth=1 https://github.com/<USERNAME>/<REPO>.git
-#RUN bash -c 'cmake -S <REPO> -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug'
+#RUN git clone --single-branch --branch=${TAG} --depth=1 https://github.com/${USER}/${REPO}.git
+#RUN cmake -S ${REPO} -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug
 #RUN cmake --build build -j `nproc`
-#RUN cmake --install build --prefix /opt/<REPO>
+#RUN cmake --install build --prefix /opt/${REPO}
 
 # --------------------------------
 
 FROM base AS dotemacs-builder
 
 RUN apt install -y emacs-nox
-RUN bash -c 'mkdir -p ~/.config/emacs'
-RUN bash -c 'touch ~/.config/emacs/init.el'
+RUN mkdir -p ~/.config/emacs
+RUN touch ~/.config/emacs/init.el
 
-RUN bash -c "emacs -x <(echo \"(package-install 'dockerfile-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'csv-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'git-modes)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'go-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'json-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'markdown-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'nginx-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'rainbow-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'sed-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'typescript-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'web-mode)\")"
-RUN bash -c "emacs -x <(echo \"(package-install 'yaml-mode)\")"
-RUN bash -c "emacs -x <(echo \"(require 'package) (add-to-list 'package-archives '(\\\"melpa-stable\\\" . \\\"https://stable.melpa.org/packages/\\\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)\")"
+RUN emacs -x <(echo "(package-install 'dockerfile-mode)")
+RUN emacs -x <(echo "(package-install 'csv-mode)")
+RUN emacs -x <(echo "(package-install 'git-modes)")
+RUN emacs -x <(echo "(package-install 'go-mode)")
+RUN emacs -x <(echo "(package-install 'json-mode)")
+RUN emacs -x <(echo "(package-install 'markdown-mode)")
+RUN emacs -x <(echo "(package-install 'nginx-mode)")
+RUN emacs -x <(echo "(package-install 'rainbow-mode)")
+RUN emacs -x <(echo "(package-install 'sed-mode)")
+RUN emacs -x <(echo "(package-install 'typescript-mode)")
+RUN emacs -x <(echo "(package-install 'web-mode)")
+RUN emacs -x <(echo "(package-install 'yaml-mode)")
+RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa-stable\" . \"https://stable.melpa.org/packages/\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)")
 
 # --------------------------------
 
@@ -91,7 +93,7 @@ COPY HOME/.local/bin/   /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
-RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/api-key.json' >>/root/.bashrc
+RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 
 # ---------------------------------
 
@@ -101,13 +103,13 @@ WORKDIR /tmp
 
 RUN mkdir -p /etc/bash_completion.d
 RUN git clone --depth=1 https://gitlab.com/akim.saidani/conan-bashcompletion.git
-RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d/
+RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
 # --------------------------------
 
 FROM base AS ssh-server
 
-RUN apt install -y openssh-server
+RUN apt install -y openssh-server bash-completion
 
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
@@ -119,12 +121,7 @@ RUN mkdir -p /var/run/sshd
 
 RUN echo 'root: ' | chpasswd
 
-# 都 SSH 登录了, 可不得支持一下补全吗.
-RUN apt install -y bash-completion
-
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
-
-# 安装 ~/
 COPY --from=homedir-builder /root/ /root/
 
 # --------------------------------
@@ -155,29 +152,14 @@ ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 # 安装 JFrog Conan
-RUN bash -c 'PATH+=:~/.local/bin pipx install conan'
-RUN bash -c 'PATH+=:~/.local/bin conan profile detect --force'
-RUN bash -c 'sed -i "s/^build_type=Release\$/build_type=Debug/" ~/.conan2/profiles/default'
+RUN PATH+=:~/.local/bin pipx install conan
+RUN PATH+=:~/.local/bin conan profile detect --force
+RUN sed -i s/^build_type=Release\$/build_type=Debug/ ~/.conan2/profiles/default
 
 # 安装 Node.js
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-RUN bash -c '. ~/.nvm/nvm.sh; nvm install 24'
-RUN bash -c '. ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot'
+RUN . ~/.nvm/nvm.sh; nvm install 24
+RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
-
-# ---------------------------------
-
-FROM dev AS rbk-cacher
-WORKDIR /tmp/huaweicloudsdkall
-
-RUN python3 -m venv .venv
-RUN bash -c '. .venv/bin/activate; pip install huaweicloudsdkall'
-
-# .................................
-
-FROM dev AS rbk-dev
-
-COPY --from=rbk-cacher /root/.cache/pip/ /root/.cache/pip/
-

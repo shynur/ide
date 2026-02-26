@@ -6,9 +6,9 @@ Requires=docker.service
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStart=/usr/bin/docker pull docker.cnb.cool/shynur/ide:latest
-ExecStart=/usr/bin/docker run -d -p 22222:22 --name ide-for-shynur -v /etc/shynur-ide/api-key.json:/etc/shynur-ide/api-key.json:ro -v /home/shynur/.git-credentials:/root/.git-credentials -v /home/shynur/.ssh/:/root/.ssh/ -v /home/shynur/.bash_history:/root/.bash_history -v /home/shynur/.cache/:/root/.cache/ -v /home/shynur/.conan2/p/:/root/.conan2/p/ -v /home/shynur/ws/:/root/ws/ docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
+ExecStart=/usr/bin/docker run -d -p 22222:22 --name ide-for-shynur    -v /etc/shynur-ide/:/etc/shynur-ide/:ro    -v /home/shynur/.git-credentials:/root/.git-credentials    -v /home/shynur/.ssh/:/root/.ssh/    -v /home/shynur/.bash_history:/root/.bash_history    -v /home/shynur/.cache/:/root/.cache/    -v /home/shynur/.conan2/p/:/root/.conan2/p/    -v /home/shynur/ws/:/root/ws/    docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
 ExecStartPre=-/usr/bin/docker rm -f ide-for-shynur
+ExecStartPre=/usr/bin/docker pull docker.cnb.cool/shynur/ide:latest
 ExecStop=-/usr/bin/docker image prune -f
 
 [Install]

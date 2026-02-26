@@ -81,7 +81,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260225 (experimental) (GCC)
+gcc version 16.0.1 20260226 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
@@ -95,7 +95,7 @@ cmake version 4.2.3
 
 ```bash
 $ conan -v
-Conan version 2.25.2
+Conan version 2.26.0
 ```
 
 ### 预安装的基础库
@@ -119,7 +119,7 @@ TODO:
 }
 ```
 
-映射到容器内的 `/etc/shynur-ide/api-key.json` 即可自动完成注册.
+映射到容器内的 `/etc/shynur-ide/ai-api-keys.json` 即可自动完成注册.
 
 > [!NOTE]
 > 密钥并未存储在环境变量中.
