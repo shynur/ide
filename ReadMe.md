@@ -126,7 +126,7 @@ TODO:
 > 仅当调用指定 AI Coder CLI 时会针对该进程设置密钥.
 
 > [!NOTE]
-> 镜像默认使用中转站 <aicodemirror.com>.
+> 镜像默认使用中转站 <https://aicodemirror.com>.
 
 ____________________________
 
