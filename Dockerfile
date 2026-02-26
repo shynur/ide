@@ -64,19 +64,19 @@ RUN apt install -y emacs-nox &>/dev/null
 RUN mkdir -p ~/.config/emacs
 RUN touch ~/.config/emacs/init.el
 
-RUN emacs -x <(echo "(package-install 'dockerfile-mode)")
-RUN emacs -x <(echo "(package-install 'csv-mode)")
-RUN emacs -x <(echo "(package-install 'git-modes)")
-RUN emacs -x <(echo "(package-install 'go-mode)")
-RUN emacs -x <(echo "(package-install 'json-mode)")
-RUN emacs -x <(echo "(package-install 'markdown-mode)")
-RUN emacs -x <(echo "(package-install 'nginx-mode)")
-RUN emacs -x <(echo "(package-install 'rainbow-mode)")
-RUN emacs -x <(echo "(package-install 'sed-mode)")
-RUN emacs -x <(echo "(package-install 'typescript-mode)")
-RUN emacs -x <(echo "(package-install 'web-mode)")
-RUN emacs -x <(echo "(package-install 'yaml-mode)")
-RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa-stable\" . \"https://stable.melpa.org/packages/\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)")
+RUN emacs -x <(echo "(package-install 'dockerfile-mode)") &>/dev/null
+RUN emacs -x <(echo "(package-install 'csv-mode)")        &>/dev/null
+RUN emacs -x <(echo "(package-install 'git-modes)")       &>/dev/null
+RUN emacs -x <(echo "(package-install 'go-mode)")         &>/dev/null
+RUN emacs -x <(echo "(package-install 'json-mode)")       &>/dev/null
+RUN emacs -x <(echo "(package-install 'markdown-mode)")   &>/dev/null
+RUN emacs -x <(echo "(package-install 'nginx-mode)")      &>/dev/null
+RUN emacs -x <(echo "(package-install 'rainbow-mode)")    &>/dev/null
+RUN emacs -x <(echo "(package-install 'sed-mode)")        &>/dev/null
+RUN emacs -x <(echo "(package-install 'typescript-mode)") &>/dev/null
+RUN emacs -x <(echo "(package-install 'web-mode)")        &>/dev/null
+RUN emacs -x <(echo "(package-install 'yaml-mode)")       &>/dev/null
+RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa-stable\" . \"https://stable.melpa.org/packages/\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)") &>/dev/null
 
 # --------------------------------
 
