@@ -170,8 +170,8 @@ RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                               
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
 
 # 安装 Node.js
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-RUN . ~/.nvm/nvm.sh; nvm install 24
+RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot
 
 # 安装 Go
