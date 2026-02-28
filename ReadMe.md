@@ -1,4 +1,10 @@
-# 方便的 C++ 开发环境
+# 通用开发环境
+
+> [!TIP]
+> Docker 镜像在多个站点皆可用:
+> - `shynur/ide`
+> - `docker.cnb.cool/shynur/ide`
+
 ## 终端工具
 ### 模糊搜索
 
