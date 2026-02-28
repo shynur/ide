@@ -12,7 +12,7 @@ RUN apt install -y wget &>/dev/null
 
 FROM wget-user AS golang-builder
 WORKDIR /tmp
-RUN GO_VERSION=1.26.0; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed s/'^x86_64$'/amd64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
+RUN GO_VERSION=`git ls-remote --tags --refs https://github.com/golang/go.git 'refs/tags/go*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/go'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
 
 # --------------------------------
@@ -20,7 +20,7 @@ RUN tar -C /usr/local -xzf go*.*-*.tar.gz
 FROM base AS cmake-builder
 RUN apt install -y wget git &>/dev/null
 WORKDIR /tmp
-RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git  'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
+RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
 RUN mkdir -p /opt/cmake; bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
 
 # --------------------------------
