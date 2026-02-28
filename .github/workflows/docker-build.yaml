@@ -6,6 +6,8 @@ on:
       - trunk
 jobs:
   update-home:
+    permissions:
+      contents: write
     uses: ./.github/workflows/update-submodule-home.yaml
     secrets: inherit
   build:
