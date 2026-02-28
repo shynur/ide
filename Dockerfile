@@ -11,6 +11,7 @@ RUN apt install -y wget &>/dev/null
 # --------------------------------
 
 FROM wget-user AS golang-builder
+RUN apt install -y git &>/dev/null
 WORKDIR /tmp
 RUN GO_VERSION=`git ls-remote --tags --refs https://github.com/golang/go.git 'refs/tags/go*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/go'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
