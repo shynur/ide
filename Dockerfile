@@ -165,6 +165,7 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 # 安装 JFrog Conan
 RUN PATH+=:~/.local/bin pipx install conan
+ENV PATH="$PATH:/root/.local/bin"
 RUN PATH+=:~/.local/bin conan profile detect --force
 RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                                                        ~/.conan2/profiles/default
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
