@@ -6,13 +6,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 # --------------------------------
 
 FROM base AS wget-user
-RUN apt install -y wget
+RUN apt install -y wget &>/dev/null
 
 # --------------------------------
 
 FROM wget-user AS golang-builder
 WORKDIR /tmp
-RUN GO_VERSION=1.26.0; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed s/'^x86_64$'/amd64/ <<<$HOSTTYPE`.tar.gz
+RUN GO_VERSION=1.26.0; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed s/'^x86_64$'/amd64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
 
 # --------------------------------
