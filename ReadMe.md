@@ -5,6 +5,13 @@
 > - `shynur/ide`
 > - `docker.cnb.cool/shynur/ide`
 
+> [!TIP]
+> 支持的 platform:
+> - `linux/amd64`
+> - `linux/arm64`
+>
+> (示例仅从 `linux/amd64` 平台摘取.)
+
 ## 终端工具
 ### 模糊搜索
 
@@ -87,7 +94,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260226 (experimental) (GCC)
+gcc version 16.0.1 20260228 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
@@ -101,7 +108,14 @@ cmake version 4.2.3
 
 ```bash
 $ conan -v
-Conan version 2.26.0
+Conan version 2.26.1
+```
+
+[Go](https://golang.google.cn/dl/#stable):
+
+```bash
+$ go version
+go version go1.26.0 linux/amd64
 ```
 
 ### 预安装的基础库
