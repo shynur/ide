@@ -5,7 +5,11 @@ on:
     branches:
       - trunk
 jobs:
+  update-home:
+    uses: ./.github/workflows/update-submodule-home.yaml
+    secrets: inherit
   build:
+    needs: update-home
     strategy:
       matrix:
         include:
