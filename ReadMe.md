@@ -94,7 +94,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260228 (experimental) (GCC)
+gcc version 16.0.1 20260301 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
@@ -146,7 +146,7 @@ TODO:
 > 仅当调用指定 AI Coder CLI 时会针对该进程设置密钥.
 
 > [!NOTE]
-> 镜像默认使用中转站 <https://aicodemirror.com>.
+> Codex / Gemini / Claude 默认使用中转站 <https://aicodemirror.com>.
 
 ____________________________
 
