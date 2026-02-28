@@ -1,7 +1,8 @@
 #! /bin/bash
 set -e
-
 cd `dirname $0`
+
+. ~/.nvm/nvm.sh
 
 go version
 g++ -v
