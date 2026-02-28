@@ -166,7 +166,8 @@ RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 # 安装 JFrog Conan
 RUN PATH+=:~/.local/bin pipx install conan
 RUN PATH+=:~/.local/bin conan profile detect --force
-RUN sed -i s/^build_type=Release\$/build_type=Debug/ ~/.conan2/profiles/default
+RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                                                        ~/.conan2/profiles/default
+RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
 
 # 安装 Node.js
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
