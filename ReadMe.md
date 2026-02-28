@@ -2,8 +2,8 @@
 
 > [!TIP]
 > Docker 镜像在多个站点皆可用:
-> - `shynur/ide`
-> - `docker.cnb.cool/shynur/ide`
+> - [`shynur/ide`](https://hub.docker.com/r/shynur/ide)
+> - [`docker.cnb.cool/shynur/ide`](https://docker.cnb.cool/shynur/ide)
 
 > [!TIP]
 > 支持的 platform:
