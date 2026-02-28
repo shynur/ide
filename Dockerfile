@@ -176,6 +176,7 @@ RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @goo
 
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
+ENV PATH="$PATH:/usr/local/go/bin"
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
