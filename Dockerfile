@@ -5,6 +5,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # --------------------------------
 
+FROM base AS wget-user
+RUN apt install -y wget
+
+# --------------------------------
+
+FROM wget-user AS golang-builder
+WORKDIR /tmp
+RUN GO_VERSION=1.26.0; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed s/'^x86_64$'/amd64/ <<<$HOSTTYPE`.tar.gz
+RUN tar -C /usr/local -xzf go*.*-*.tar.gz
+
+# --------------------------------
+
 FROM base AS cmake-builder
 RUN apt install -y wget git &>/dev/null
 WORKDIR /tmp
@@ -159,6 +171,9 @@ RUN sed -i s/^build_type=Release\$/build_type=Debug/ ~/.conan2/profiles/default
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 RUN . ~/.nvm/nvm.sh; nvm install 24
 RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot
+
+# 安装 Go
+COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
