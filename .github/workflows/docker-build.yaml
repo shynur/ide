@@ -12,6 +12,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -26,11 +28,14 @@ jobs:
           username: cnb
           password: ${{ secrets.CNBCOOL_TOKEN }}
       - name: Build & Push Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ github.repository_owner }}/${{ github.event.repository.name }}
             docker.cnb.cool/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
