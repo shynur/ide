@@ -181,5 +181,7 @@ RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @goo
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
 
+RUN chmod -x `which unminimize`
+
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
