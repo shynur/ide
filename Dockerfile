@@ -1,7 +1,7 @@
 FROM ubuntu AS base
 ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
-RUN apt update &>/dev/null
+RUN apt update >/dev/null
 ENV DEBIAN_FRONTEND=noninteractive
 
 # --------------------------------
@@ -115,6 +115,7 @@ COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
+COPY --from=nvm-builder      /root/.nvm/          /root/.nvm/
 
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 
@@ -182,7 +183,6 @@ RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                               
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
 
 # 安装 Codex, Gemini, Copilot
-COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
 RUN . ~/.nvm/nvm.sh; npm install -g @openai/codex @google/gemini-cli @github/copilot
 
 # 安装 Claude Code
