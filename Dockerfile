@@ -95,6 +95,13 @@ RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa
 
 # --------------------------------
 
+FROM base AS nvm-builder
+RUN apt install -y git &>/dev/null
+RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
+RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
+
+# --------------------------------
+
 FROM base AS homedir-builder
 
 COPY HOME/.config/      /root/.config/
@@ -174,10 +181,12 @@ RUN PATH+=:~/.local/bin conan profile detect --force
 RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                                                        ~/.conan2/profiles/default
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
 
-# 安装 Node.js
-RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
-RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli @github/copilot
+# 安装 Codex, Gemini, Copilot
+COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
+RUN . ~/.nvm/nvm.sh; npm install -g @openai/codex @google/gemini-cli @github/copilot
+
+# 安装 Claude Code
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
