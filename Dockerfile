@@ -115,7 +115,9 @@ COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
-COPY --from=nvm-builder      /root/.nvm/          /root/.nvm/
+
+COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
+RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
 
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 
