@@ -1,4 +1,5 @@
 FROM ubuntu AS base
+ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
 RUN apt update &>/dev/null
 ENV DEBIAN_FRONTEND=noninteractive
@@ -22,7 +23,8 @@ FROM base AS cmake-builder
 RUN apt install -y wget git &>/dev/null
 WORKDIR /tmp
 RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
-RUN mkdir -p /opt/cmake; bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
+RUN bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
+RUN rm -f /opt/cmake/bin/cmake-gui
 
 # --------------------------------
 
@@ -181,7 +183,9 @@ RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @goo
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
 
-RUN chmod -x `which unminimize`
+WORKDIR /tmp
+COPY               ./rc/chmod-x.bash .
+RUN script_to_execute=./chmod-x.bash; $script_to_execute; rm $script_to_execute
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
