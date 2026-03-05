@@ -7,12 +7,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 # --------------------------------
 
 FROM base AS wget-user
-RUN apt install -y wget &>/dev/null
+RUN apt install -y wget >/dev/null
 
 # --------------------------------
 
 FROM wget-user AS golang-builder
-RUN apt install -y git &>/dev/null
+RUN apt install -y git >/dev/null
 WORKDIR /tmp
 RUN GO_VERSION=`git ls-remote --tags --refs https://github.com/golang/go.git 'refs/tags/go*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/go'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
@@ -20,7 +20,7 @@ RUN tar -C /usr/local -xzf go*.*-*.tar.gz
 # --------------------------------
 
 FROM base AS cmake-builder
-RUN apt install -y wget git &>/dev/null
+RUN apt install -y wget git >/dev/null
 WORKDIR /tmp
 RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
 RUN mkdir -p /opt/cmake; bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
@@ -29,7 +29,7 @@ RUN rm -f /opt/cmake/bin/cmake-gui
 # --------------------------------
 
 FROM base AS gcc-builder
-RUN apt install -y g++ wget bzip2 file bison make flex libfl-dev &>/dev/null
+RUN apt install -y g++ wget bzip2 file bison make flex libfl-dev >/dev/null
 
 COPY make-gcc/src/ /tmp/make-gcc/src/
 WORKDIR /tmp/make-gcc/src
@@ -50,7 +50,7 @@ RUN ln -s g++ c++
 
 FROM base AS cmake-user
 
-RUN apt install -y libc6-dev binutils make &>/dev/null
+RUN apt install -y libc6-dev binutils make >/dev/null
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
@@ -75,7 +75,7 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
 FROM base AS dotemacs-builder
 
-RUN apt install -y emacs-nox &>/dev/null
+RUN apt install -y emacs-nox >/dev/null
 RUN mkdir -p ~/.config/emacs
 RUN touch ~/.config/emacs/init.el
 
@@ -96,7 +96,7 @@ RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa
 # --------------------------------
 
 FROM base AS nvm-builder
-RUN apt install -y git &>/dev/null
+RUN apt install -y curl git >/dev/null
 RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
 RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 
@@ -122,7 +122,7 @@ RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.jso
 # ---------------------------------
 
 FROM base AS etcdir-builder
-RUN apt install -y git &>/dev/null
+RUN apt install -y git >/dev/null
 WORKDIR /tmp
 
 RUN mkdir -p /etc/bash_completion.d
@@ -133,7 +133,7 @@ RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
 FROM base AS ssh-server
 
-RUN apt install -y openssh-server bash-completion &>/dev/null
+RUN apt install -y openssh-server bash-completion >/dev/null
 
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
@@ -153,16 +153,16 @@ COPY --from=homedir-builder /root/ /root/
 FROM ssh-server AS dev
 
 # 安装 python, venv, pipx
-RUN apt install -y tzdata &>/dev/null
+RUN apt install -y tzdata >/dev/null
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
-RUN apt install -y python3 python3-venv pipx &>/dev/null
+RUN apt install -y python3 python3-venv pipx >/dev/null
 
 # 安装 Emacs
-RUN apt install -y emacs-nox &>/dev/null
+RUN apt install -y emacs-nox >/dev/null
 
 # 安装 常用工具
-RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat curl &>/dev/null
+RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat curl >/dev/null
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
