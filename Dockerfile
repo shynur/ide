@@ -104,6 +104,8 @@ RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 
 FROM base AS homedir-builder
 
+RUN apt install -y git curl >/dev/null
+
 COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
 COPY HOME/.bashrc       /root/
@@ -116,6 +118,7 @@ COPY HOME/.local/bin/   /root/.local/bin/
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
+# 会修改 .bashrc, 因此要在 COPY .bashrc 之后再执行.
 COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
 RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
 
@@ -148,7 +151,9 @@ RUN mkdir -p /var/run/sshd
 RUN echo 'root: ' | chpasswd
 
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
+
 COPY --from=homedir-builder /root/ /root/
+RUN rm -f ~/.profile
 
 # --------------------------------
 
