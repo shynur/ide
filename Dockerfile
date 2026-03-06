@@ -204,4 +204,6 @@ COPY               ./rc/chmod-x.bash .
 RUN script_to_execute=./chmod-x.bash; $script_to_execute; rm $script_to_execute
 
 WORKDIR /root/
+# 设置 COLORTERM=truecolor 对于 console 会有问题, 但我通常用 Windows Terminal 所以无所谓.
+ENV COLORTERM=truecolor
 CMD ["/bin/bash", "-l"]
