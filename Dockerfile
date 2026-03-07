@@ -191,6 +191,8 @@ RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-availa
 
 # 安装 Codex, Gemini, Copilot
 RUN . ~/.nvm/nvm.sh; npm install -g @openai/codex @google/gemini-cli @github/copilot
+# 设置 COLORTERM=truecolor 对于 console 会有问题, 但我通常用 Windows Terminal 所以无所谓.
+RUN echo 'export COLORTERM=truecolor' >>/etc/profile  # 使 Gemini UI 更花哨
 
 # 安装 Claude Code
 RUN curl -fsSL https://claude.ai/install.sh | bash
@@ -204,6 +206,4 @@ COPY               ./rc/chmod-x.bash .
 RUN script_to_execute=./chmod-x.bash; $script_to_execute; rm $script_to_execute
 
 WORKDIR /root/
-# 设置 COLORTERM=truecolor 对于 console 会有问题, 但我通常用 Windows Terminal 所以无所谓.
-ENV COLORTERM=truecolor
 CMD ["/bin/bash", "-l"]
