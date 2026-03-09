@@ -115,6 +115,7 @@ COPY HOME/.codex/       /root/.codex/
 COPY HOME/.gemini/      /root/.gemini/
 COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
+COPY HOME/Documents/PowerShell/ /root/Documents/PowerShell/ 
 
 COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
