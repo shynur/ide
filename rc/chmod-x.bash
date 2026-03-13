@@ -11,7 +11,7 @@ function chmod-x {
 }
 
 for exe in \
-{add,remove}-shell apt-cdrom                                                  \
+remove-shell apt-cdrom                                                        \
 bashbug i386                                                                  \
 mail{,q,x} mke2fs mkfs{,.{bfs,cramfs,ext{2,3,4},minix}} mkswap mount movemail \
 poweroff                                                                      \
