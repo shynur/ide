@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CFLAGS='-g0 -O0'
+CFLAGS='-g0 -Oz'
 
 CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
 --program-suffix=-16 \
