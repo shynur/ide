@@ -146,7 +146,7 @@ RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
 RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
 RUN echo >>/etc/ssh/sshd_config 'PermitEmptyPasswords yes'
 RUN echo >>/etc/ssh/sshd_config 'Banner none'
-
+RUN passwd -d root
 RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
