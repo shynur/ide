@@ -74,7 +74,7 @@ docker run  \
 如果是同主机, 可以用
 
 ```bash
-ssh -p 22222 root@localhost  # 再敲一个空格+回车
+ssh -p 22222 root@localhost
 ```
 
 或者从外部 SSH 进去.

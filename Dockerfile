@@ -144,12 +144,11 @@ RUN apt install -y openssh-server bash-completion >/dev/null
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
 RUN echo >>/etc/ssh/sshd_config 'PasswordAuthentication yes'
+RUN echo >>/etc/ssh/sshd_config 'PermitEmptyPasswords yes'
 RUN echo >>/etc/ssh/sshd_config 'Banner none'
 
 RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
-
-RUN echo 'root: ' | chpasswd
 
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 
