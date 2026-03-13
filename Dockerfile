@@ -76,8 +76,7 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 FROM base AS dotemacs-builder
 
 RUN apt install -y emacs-nox >/dev/null
-RUN mkdir -p ~/.config/emacs
-RUN touch ~/.config/emacs/init.el
+COPY HOME/.config/emacs/ /root/.config/emacs/
 
 RUN emacs -x <(echo "(package-install 'dockerfile-mode)") &>/dev/null
 RUN emacs -x <(echo "(package-install 'csv-mode)")        &>/dev/null
