@@ -73,27 +73,6 @@ ENV CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++
 
 # --------------------------------
 
-FROM base AS dotemacs-builder
-
-RUN apt install -y emacs-nox >/dev/null
-COPY HOME/.config/emacs/ /root/.config/emacs/
-
-RUN emacs -x <(echo "(package-install 'dockerfile-mode)") &>/dev/null
-RUN emacs -x <(echo "(package-install 'csv-mode)")        &>/dev/null
-RUN emacs -x <(echo "(package-install 'git-modes)")       &>/dev/null
-RUN emacs -x <(echo "(package-install 'go-mode)")         &>/dev/null
-RUN emacs -x <(echo "(package-install 'json-mode)")       &>/dev/null
-RUN emacs -x <(echo "(package-install 'markdown-mode)")   &>/dev/null
-RUN emacs -x <(echo "(package-install 'nginx-mode)")      &>/dev/null
-RUN emacs -x <(echo "(package-install 'rainbow-mode)")    &>/dev/null
-RUN emacs -x <(echo "(package-install 'sed-mode)")        &>/dev/null
-RUN emacs -x <(echo "(package-install 'typescript-mode)") &>/dev/null
-RUN emacs -x <(echo "(package-install 'web-mode)")        &>/dev/null
-RUN emacs -x <(echo "(package-install 'yaml-mode)")       &>/dev/null
-RUN emacs -x <(echo "(require 'package) (add-to-list 'package-archives '(\"melpa-stable\" . \"https://stable.melpa.org/packages/\") t) (package-initialize) (package-refresh-contents) (package-install 'cmake-mode)") &>/dev/null
-
-# --------------------------------
-
 FROM base AS nvm-builder
 RUN apt install -y curl git >/dev/null
 RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
@@ -115,8 +94,6 @@ COPY HOME/.codex/       /root/.codex/
 COPY HOME/.gemini/      /root/.gemini/
 COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
-
-COPY --from=dotemacs-builder /root/.config/emacs/ /root/.config/emacs/
 
 # 会修改 .bashrc, 因此要在 COPY .bashrc 之后再执行.
 COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
