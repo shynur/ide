@@ -94,7 +94,7 @@ COPY HOME/.codex/       /root/.codex/
 COPY HOME/.gemini/      /root/.gemini/
 COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
-RUN cd ~/.config/emacs; git clone --single-branch --branch=trunk --bare https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git --work-tree=. reset --mixed HEAD
+RUN cd ~/.config/emacs; rm -rf .git; git clone --single-branch --branch=trunk --bare https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git --work-tree=. reset --mixed HEAD
 
 # 会修改 .bashrc, 因此要在 COPY .bashrc 之后再执行.
 COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
