@@ -42,8 +42,8 @@ jobs:
           push: true
           tags: |
             ${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ matrix.arch }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          #cache-from: type=gha
+          #cache-to: type=gha,mode=max
   build-cnb:
       needs: build
       runs-on: ubuntu-latest
