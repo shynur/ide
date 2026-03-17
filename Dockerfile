@@ -89,6 +89,7 @@ COPY HOME/.bash_profile /root/
 COPY HOME/.bashrc       /root/
 COPY HOME/.inputrc      /root/
 COPY HOME/.conan2/      /root/.conan2/
+COPY HOME/.github/      /root/.github/
 COPY HOME/.copilot/     /root/.copilot/
 COPY HOME/.codex/       /root/.codex/
 COPY HOME/.gemini/      /root/.gemini/
