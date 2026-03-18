@@ -118,7 +118,7 @@ RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
 FROM base AS ssh-server
 
-RUN apt install -y openssh-server bash-completion >/dev/null
+RUN apt install -y openssh-server bash-completion sudo >/dev/null
 
 EXPOSE 22
 RUN echo >>/etc/ssh/sshd_config 'PermitRootLogin yes'
