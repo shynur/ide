@@ -131,8 +131,10 @@ RUN mkdir -p /var/run/sshd
 
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 
-COPY --from=homedir-builder /root/ /root/
 RUN rm -f ~/.profile
+COPY --from=homedir-builder /root/ /root/
+
+RUN /root/.local/bin/chmod-x-useless.bash
 
 # --------------------------------
 
@@ -176,10 +178,6 @@ RUN echo 'export COLORTERM=truecolor' >>/etc/profile  # 使 Gemini UI 更花哨
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
-
-WORKDIR /tmp
-COPY               ./rc/chmod-x.bash .
-RUN script_to_execute=./chmod-x.bash; $script_to_execute; rm $script_to_execute
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
