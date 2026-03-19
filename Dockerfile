@@ -86,6 +86,7 @@ RUN apt install -y git curl >/dev/null
 
 COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
+COPY HOME/.profile.py   /root/
 COPY HOME/.bashrc       /root/
 COPY HOME/.inputrc      /root/
 COPY HOME/.conan2/      /root/.conan2/
