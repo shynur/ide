@@ -82,6 +82,7 @@ RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 
 FROM base AS rustup-builder
 RUN curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | (exec -a sh bash)
+RUN . ~/.cargo/env; rustup component add rust-analyzer
 
 # --------------------------------
 
