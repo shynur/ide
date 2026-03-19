@@ -94,14 +94,14 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260311 (experimental) (GCC)
+gcc version 16.0.1 20260318 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
 
 ```bash
 $ cmake --version
-cmake version 4.2.3
+cmake version 4.3.0
 ```
 
 [JFrog Conan](https://github.com/conan-io/conan):
@@ -116,13 +116,25 @@ Conan version 2.26.2
 ```bash
 $ go version
 go version go1.26.1 linux/amd64
+$ gopls version
+golang.org/x/tools/gopls v0.21.1
 ```
 
-### 预安装的基础库
+[Rust](https://doc.rust-lang.org/stable/releases.html):
 
-TODO:
-- [ ] 安装 FastDDS.
-- [ ] 安装 Perfetto.
+```bash
+$ cargo version
+cargo 1.94.0 (85eff7c80 2026-01-15)
+$ rust-analyzer --version
+rust-analyzer 1.94.0 (4a4ef49 2026-03-02)
+```
+
+Emacs:
+
+```bash
+$ emacs -version
+GNU Emacs 29.3
+```
 
 ## AI Coder CLI
 

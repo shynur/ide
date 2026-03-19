@@ -12,10 +12,14 @@ RUN apt install -y wget >/dev/null
 # --------------------------------
 
 FROM wget-user AS golang-builder
+
 RUN apt install -y git >/dev/null
 WORKDIR /tmp
 RUN GO_VERSION=`git ls-remote --tags --refs https://github.com/golang/go.git 'refs/tags/go*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/go'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
+
+ENV PATH="$PATH:/usr/local/go/bin"
+RUN go install golang.org/x/tools/gopls@latest
 
 # --------------------------------
 
@@ -81,7 +85,7 @@ RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 # --------------------------------
 
 FROM base AS rustup-builder
-RUN curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | (exec -a sh bash)
+RUN exec -a sh bash <(curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs) -y
 RUN . ~/.cargo/env; rustup component add rust-analyzer
 
 # --------------------------------
@@ -184,6 +188,7 @@ RUN echo 'export COLORTERM=truecolor' >>/etc/profile  # 使 Gemini UI 更花哨
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
+COPY --from=golang-builder /root/go/ /root/go/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
