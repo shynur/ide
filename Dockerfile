@@ -80,15 +80,25 @@ RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 
 # --------------------------------
 
-FROM base AS homedir-builder
+FROM base AS rustup-builder
+RUN curl --proto =https --tlsv1.2 -sSf https://sh.rustup.rs | (exec -a sh bash)
 
+# --------------------------------
+
+FROM base AS homedir-builder
 RUN apt install -y git curl >/dev/null
+
+COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
+
+COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
+COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
 COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
 RUN rm -rf ~/.profile
 COPY HOME/.profile.py   /root/
 COPY HOME/.bashrc       /root/
+RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 COPY HOME/.inputrc      /root/
 COPY HOME/.conan2/      /root/.conan2/
 COPY HOME/.github/      /root/.github/
@@ -98,13 +108,6 @@ COPY HOME/.gemini/      /root/.gemini/
 COPY HOME/.claude/      /root/.claude/
 COPY HOME/.local/bin/   /root/.local/bin/
 RUN cd ~/.config/emacs; rm -rf .git; git clone --bare --depth=1 --branch=trunk https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git config core.bare false; git reset --mixed HEAD
-
-# 会修改 .bashrc, 因此要在 COPY .bashrc 之后再执行.
-COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
-RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
-RUN echo '. <(npm completion)' >>/root/.bashrc
-
-RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 
 # ---------------------------------
 
