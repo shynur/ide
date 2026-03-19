@@ -86,6 +86,7 @@ RUN apt install -y git curl >/dev/null
 
 COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
+RUN rm -rf ~/.profile
 COPY HOME/.profile.py   /root/
 COPY HOME/.bashrc       /root/
 COPY HOME/.inputrc      /root/
@@ -132,7 +133,7 @@ RUN mkdir -p /var/run/sshd
 
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 
-RUN rm -f ~/.profile
+RUN rm -rf ~
 COPY --from=homedir-builder /root/ /root/
 
 RUN /root/.local/bin/chmod-x-useless.bash
