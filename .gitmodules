@@ -1,6 +1,6 @@
 [submodule "make-gcc/src"]
-	path = make-gcc/src
+	path = image/make-gcc/src
 	url = git://gcc.gnu.org/git/gcc.git
 [submodule "HOME"]
-	path = HOME
+	path = image/HOME
 	url = https://github.com/shynur/HOME.git
