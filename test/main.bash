@@ -2,16 +2,20 @@
 set -e
 cd `dirname $0`
 
+
+. ~/.cargo/env
 . ~/.nvm/nvm.sh
 
-go version
-g++ -v
-cmake --version
-conan -v
-python3 --version
-node -v
-emacs -version
+
+cargo version
 claude -v
+cmake --version
 codex --version
-gemini -v
+conan -v
 copilot -v
+emacs -version
+g++ -v
+gemini -v
+go version
+node -v
+python3 --version

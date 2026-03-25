@@ -6,6 +6,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # --------------------------------
 
+FROM scratch AS version-builder
+COPY ./VERSION /VERSION
+
+# --------------------------------
+
 FROM base AS wget-user
 RUN apt install -y wget >/dev/null
 
@@ -140,6 +145,7 @@ RUN passwd -d root
 RUN sed -i '/pam_motd\.so/ s/^/#/' /etc/pam.d/sshd
 RUN mkdir -p /var/run/sshd
 
+COPY --from=version-builder /VERSION /VERSION
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 
 RUN rm -rf ~

@@ -27,6 +27,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Generate VERSION
+        run: |
+          if [ ${{ github.ref_type }} = tag ]; then
+              echo ${{ github.ref_name }} >|image/VERSION
+          else
+              make image/VERSION
+          fi
       - name: Checkout Submodules
         run: git submodule update --init --recursive --depth=1
       - name: Set up Docker Buildx
@@ -64,7 +71,7 @@ jobs:
             docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:x64   $SHYNUR_IDE_IMAGE:x64
             docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:arm64 $SHYNUR_IDE_IMAGE:arm64
   merge:
-    needs: 
+    needs:
       - build
       - build-cnb
     runs-on: ubuntu-latest

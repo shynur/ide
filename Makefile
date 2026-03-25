@@ -1,14 +1,18 @@
 SHELL := /bin/bash -O globstar
 
-.PHONY: all
-all:
+all: FORCE
 
 %/:
 	mkdir -p $@
 	-chmod -R a+rwx $@
 
-.PHONY: git-push
-git-push:
+image/VERSION: FORCE | image/
+	git rev-parse HEAD >|$@
+
+git-push: FORCE
 	git add .
 	git commit -m ';'
 	git push
+
+.PHONY: FORCE
+FORCE:
