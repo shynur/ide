@@ -129,7 +129,7 @@ $ rust-analyzer --version
 rust-analyzer 1.94.0 (4a4ef49 2026-03-02)
 ```
 
-Emacs:
+[Emacs](https://www.gnu.org/software/emacs/#Releases):
 
 ```bash
 $ emacs -version
