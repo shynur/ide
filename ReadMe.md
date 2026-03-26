@@ -82,6 +82,7 @@ ssh -p 22222 root@localhost
 ### systemd
 
 开机时自动更新 image 并启动它作为 SSH server.
+此外会每 6 小时从 GitHub 检查并更新 `/etc/systemd/system/shynur-ide.service` 本身; 若有变更会自动 `daemon-reload` 并重启服务.
 See [`/etc/systemd/system/shynur-ide.service`](./shynur-ide.service).
 
 ## 开发工具
