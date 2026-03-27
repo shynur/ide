@@ -94,7 +94,7 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260325 (experimental) (GCC)
+gcc version 16.0.1 20260327 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
