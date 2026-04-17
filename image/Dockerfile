@@ -1,7 +1,8 @@
 FROM ubuntu AS base
 ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
-RUN sed -i 's|^URIs: https\?://[^ ]\+\?\.ubuntu\.com/ubuntu/$|URIs: https://mirrors.tuna.tsinghua.edu.cn/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources
+RUN { apt update && apt install ca-certificates; } >/dev/null
+RUN sed -i 's|^URIs: https\?://[^ ]\+\?\.ubuntu\.com/ubuntu/$|URIs: https://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources
 RUN apt update >/dev/null
 ENV DEBIAN_FRONTEND=noninteractive
 
