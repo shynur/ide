@@ -160,6 +160,11 @@ GNU Emacs 29.3
 > [!NOTE]
 > Codex / Gemini / Claude 默认使用中转站 <https://aicodemirror.com>.
 
+## 镜像源
+
+软件包的源已替换成国内的镜像.
+(例如, apt, npm, pip, 等等.)
+
 ____________________________
 
 <footer>
