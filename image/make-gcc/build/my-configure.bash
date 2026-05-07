@@ -3,7 +3,7 @@
 CFLAGS='-g0 -Oz'
 
 CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS ../src/configure \
---program-suffix=-16                             \
+--program-suffix=-17                             \
 --enable-shared                                  \
 --disable-host-shared                            \
 --enable-versioned-jit                           \
