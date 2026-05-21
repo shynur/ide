@@ -12,7 +12,7 @@ claude -v
 cmake --version
 codex --version
 conan -v
-copilot -v
+#copilot -v
 emacs -version
 g++ -v
 gemini -v
