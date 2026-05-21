@@ -132,6 +132,8 @@ RUN mkdir -p /etc/bash_completion.d
 RUN git clone --depth=1 https://gitlab.com/akim.saidani/conan-bashcompletion.git
 RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
+COPY --from=homedir-builder /root/ /etc/skel/
+
 # --------------------------------
 
 FROM base AS ssh-server
@@ -149,6 +151,7 @@ RUN mkdir -p /var/run/sshd
 
 COPY --from=version-builder /VERSION /VERSION
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
+COPY --from=etcdir-builder /etc/skel/              /etc/skel/
 
 RUN rm -rf ~
 COPY --from=homedir-builder /root/ /root/
@@ -201,3 +204,10 @@ COPY --from=golang-builder /root/go/ /root/go/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
+
+# --------------------------------
+
+FROM dev AS insane-dev
+RUN apt install -y libstdc++-13-dev clang >/dev/null
+RUN useradd -m -G sudo -s /bin/bash sr
+RUN passwd -d sr
