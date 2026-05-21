@@ -1,4 +1,4 @@
-FROM ubuntu AS base
+FROM ubuntu:24.04 AS base
 ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
 RUN { apt update && apt install -y ca-certificates; } >/dev/null
@@ -208,6 +208,6 @@ CMD ["/bin/bash", "-l"]
 # --------------------------------
 
 FROM dev AS insane-dev
-RUN apt install -y libstdc++-13-dev clang >/dev/null
+RUN apt install -y clang >/dev/null
 RUN useradd -m -G sudo -s /bin/bash sr
 RUN passwd -d sr
