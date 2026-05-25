@@ -193,7 +193,7 @@ RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                               
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
 
 # 安装 AI CLI
-RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli `#@github/copilot`
+RUN . ~/.nvm/nvm.sh; npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli `#@github/copilot`; rm -rf /tmp/node-compile-cache
 # 设置 COLORTERM=truecolor 对于 console 会有问题, 但我通常用 Windows Terminal 所以无所谓.
 RUN echo 'export COLORTERM=truecolor' >>/etc/profile  # 使 Gemini UI 更花哨
 
