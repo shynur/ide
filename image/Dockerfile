@@ -134,8 +134,6 @@ RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
 COPY --from=homedir-builder /root/ /etc/skel/
 
-COPY services/ /etc/systemd/system/
-
 # --------------------------------
 
 FROM base AS ssh-server
@@ -154,7 +152,6 @@ RUN mkdir -p /var/run/sshd
 COPY --from=version-builder /VERSION /VERSION
 COPY --from=etcdir-builder /etc/bash_completion.d/ /etc/bash_completion.d/
 COPY --from=etcdir-builder /etc/skel/              /etc/skel/
-COPY --from=etcdir-builder /etc/systemd/system/    /etc/systemd/system/
 
 RUN rm -rf ~
 COPY --from=homedir-builder /root/ /root/
@@ -175,7 +172,7 @@ RUN apt install -y python3 python3-venv pipx >/dev/null
 RUN apt install -y emacs-nox >/dev/null
 
 # 安装 常用工具
-RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat xmrig >/dev/null
+RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat >/dev/null
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
