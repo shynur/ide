@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS base
+FROM ubuntu AS base
 ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
 RUN { apt update && apt install -y ca-certificates; } >/dev/null
