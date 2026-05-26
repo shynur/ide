@@ -181,6 +181,7 @@ ENV PATH="$PATH:/opt/cmake/bin"
 
 # 安装 GCC
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+RUN echo /opt/gcc/lib64 >/etc/ld.so.conf.d/opt-gcc.conf && ldconfig
 RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
