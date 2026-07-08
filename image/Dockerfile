@@ -106,9 +106,10 @@ COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
+RUN touch /root/.hushlogin
 COPY HOME/.config/      /root/.config/
 COPY HOME/.bash_profile /root/
-RUN rm -rf ~/.profile
+RUN rm -f ~/.profile
 COPY HOME/.profile.py   /root/
 COPY HOME/.bashrc       /root/
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
