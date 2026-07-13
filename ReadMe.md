@@ -94,46 +94,46 @@ $ g++ -v
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 Supported LTO compression algorithms: zlib
-gcc version 16.0.1 20260327 (experimental) (GCC)
+gcc version 17.0.0 20260710 (experimental) (GCC)
 ```
 
 [CMake](https://github.com/Kitware/CMake):
 
 ```bash
 $ cmake --version
-cmake version 4.3.0
+cmake version 4.4.0
 ```
 
 [JFrog Conan](https://github.com/conan-io/conan):
 
 ```bash
 $ conan -v
-Conan version 2.26.2
+Conan version 2.30
 ```
 
 [Go](https://golang.google.cn/dl/#stable):
 
 ```bash
 $ go version
-go version go1.26.1 linux/amd64
+go version go1.26.5 linux/amd64
 $ gopls version
-golang.org/x/tools/gopls v0.21.1
+golang.org/x/tools/gopls v0.23.0
 ```
 
 [Rust](https://doc.rust-lang.org/stable/releases.html):
 
 ```bash
 $ cargo version
-cargo 1.94.0 (85eff7c80 2026-01-15)
+cargo 1.97.0 (c980f4866 2026-06-30)
 $ rust-analyzer --version
-rust-analyzer 1.94.0 (4a4ef49 2026-03-02)
+rust-analyzer 1.97.0 (2d8144b 2026-07-07)
 ```
 
 [Emacs](https://www.gnu.org/software/emacs/#Releases):
 
 ```bash
 $ emacs -version
-GNU Emacs 29.3
+GNU Emacs 30.2
 ```
 
 ## AI Coder CLI
@@ -163,7 +163,7 @@ GNU Emacs 29.3
 ## 镜像源
 
 软件包的源已替换成国内的镜像.
-(例如, apt, npm, pip, 等等.)
+(例如, apt, npm, pip.)
 
 ____________________________
 
