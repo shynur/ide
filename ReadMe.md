@@ -158,6 +158,25 @@ GNU Emacs 30.2
 > [!NOTE]
 > Codex / Gemini / Claude 默认使用中转站 <https://aicodemirror.com>.
 
+## 梯子🪜
+
+`/etc/shynur-ide/vpn.json` (这个目录放在宿主机中, 挂载到容器上):
+
+```json
+{
+    "name": "XXX",
+    "server": "example.com",
+    "port": 443,
+    "uuid": "1234-abcd",
+    "servername": "www.apple.com",
+    "public-key": "Abc-123",
+    "short-id": "996233"
+}
+```
+
+如果提供这个文件, 会自动填充到预备好的 YAML 模板中, 供 mihomo 使用.
+如果成功用此配置启动 mihomo, 则自动设置容器内所有命令的代理.
+
 ## 镜像源
 
 软件包的源已替换成国内的镜像.
