@@ -173,7 +173,13 @@ RUN apt install -y python3 python3-venv pipx >/dev/null
 RUN apt install -y emacs-nox >/dev/null
 
 # 安装 常用工具
-RUN apt install -y git iproute2 sudo make htop wget curl psmisc tree fzf bat >/dev/null
+RUN apt install -y git iproute2 sudo make htop wget curl gzip psmisc tree fzf bat >/dev/null
+
+# 安装 mihomo
+RUN MIHOMO_VERSION=1.19.29 wget -q -P /usr/local/bin https://github.com/MetaCubeX/mihomo/releases/download/v$MIHOMO_VERSION/mihomo-linux-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`-v$MIHOMO_VERSION.gz
+RUN gzip -d /usr/local/bin/mihomo-*.gz
+RUN chmod a+x /usr/local/bin/mihomo-*
+RUN cd /usr/local/bin; ln -s mihomo-* mihomo
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
