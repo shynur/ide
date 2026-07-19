@@ -180,6 +180,8 @@ RUN MIHOMO_VERSION=1.19.29; wget -q -P /usr/local/bin https://github.com/MetaCub
 RUN gzip -d /usr/local/bin/mihomo-*.gz
 RUN chmod a+x /usr/local/bin/mihomo-*
 RUN cd /usr/local/bin; ln -s mihomo-* mihomo
+RUN PATH+=:~/.local/bin fetch-mihomo-geodata.bash
+RUN echo 'my-mihomo.bash up || true' >>~/.bash_profile
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
@@ -218,9 +220,3 @@ COPY --from=golang-builder /root/go/ /root/go/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
-
-# --------------------------------
-# FROM dev AS seer-dev
-# RUN apt install -y clang >/dev/null
-# RUN useradd -m -G sudo -s /bin/bash sr
-# RUN passwd -d sr
