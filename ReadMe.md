@@ -174,7 +174,7 @@ GNU Emacs 30.2
 }
 ```
 
-如果提供这个文件, 会自动填充到预备好的 YAML 模板中, 供 mihomo 使用.
+如果提供这个文件, 会自动填充到预备好的 [YAML 模板](https://github.com/shynur/HOME/blob/trunk/.config/mihomo/template.yaml) 中, 供 mihomo 使用.
 如果成功用此配置启动 mihomo, 则自动设置容器内所有命令的代理.
 
 ## 镜像源
