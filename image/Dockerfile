@@ -181,7 +181,7 @@ RUN gzip -d /usr/local/bin/mihomo-*.gz
 RUN chmod a+x /usr/local/bin/mihomo-*
 RUN cd /usr/local/bin; ln -s mihomo-* mihomo
 RUN PATH+=:~/.local/bin fetch-mihomo-geodata.bash
-RUN echo 'if my-mihomo.bash up; then export http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890; fi' >>~/.bash_profile
+RUN echo 'if my-mihomo.bash up; then export http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 all_proxy=socks5h://127.0.0.1:7890; fi' >>~/.bash_profile
 
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
