@@ -157,7 +157,7 @@ COPY --from=etcdir-builder /etc/skel/              /etc/skel/
 
 RUN rm -rf ~
 COPY --from=homedir-builder /root/ /root/
-RUN echo $'Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n  GlobalKnownHostsFile /dev/null' >>/root/.ssh/config
+RUN echo $'Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n  GlobalKnownHostsFile /dev/null\n  LogLevel ERROR' >>/root/.ssh/config
 
 RUN /root/.local/bin/chmod-x-useless.bash
 
