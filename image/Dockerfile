@@ -115,6 +115,7 @@ COPY HOME/.bashrc       /root/
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 COPY HOME/.inputrc      /root/
 COPY HOME/.conan2/      /root/.conan2/
+COPY HOME/.ssh/         /root/.ssh/
 COPY HOME/.github/      /root/.github/
 COPY HOME/.copilot/     /root/.copilot/
 COPY HOME/.codex/       /root/.codex/
