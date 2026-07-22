@@ -15,7 +15,8 @@ conan -v
 #copilot -v
 emacs -version
 g++ -v
-gemini -v
+#gemini -v
 go version
 node -v
 python3 --version
+mihomo --help
