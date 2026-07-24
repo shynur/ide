@@ -20,3 +20,4 @@ go version
 node -v
 python3 --version
 mihomo --help
+kimi --version
