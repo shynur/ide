@@ -145,7 +145,8 @@ GNU Emacs 30.2
   "ANTHROPIC_API_KEY": "<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>",
   "OPENAI_API_KEY": "",
   "GEMINI_API_KEY": "",
-  "GITHUB_TOKEN": ""
+  "GITHUB_TOKEN": "",
+  "KIMI_ALIBABA_BAILIAN_API_KEY": ""
 }
 ```
 
@@ -156,7 +157,8 @@ GNU Emacs 30.2
 > 仅当调用指定 AI Coder CLI 时会针对该进程设置密钥.
 
 > [!NOTE]
-> Codex / Gemini / Claude 默认使用中转站 <https://aicodemirror.com>.
+> Codex / Gemini / Claude 默认使用中转站 <https://aicodemirror.com>.  <br />
+> Kimi 使用 <https://dashscope.aliyuncs.com/compatible-mode/v1>.
 
 ## 梯子🪜
 
