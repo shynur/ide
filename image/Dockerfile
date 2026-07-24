@@ -121,6 +121,7 @@ COPY HOME/.copilot/     /root/.copilot/
 COPY HOME/.codex/       /root/.codex/
 COPY HOME/.gemini/      /root/.gemini/
 COPY HOME/.claude/      /root/.claude/
+COPY HOME/.kimi-code/   /root/.kimi-code/
 COPY HOME/.local/bin/   /root/.local/bin/
 RUN cd ~/.config/emacs; rm -rf .git; git clone --bare --depth=1 --branch=trunk https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git config core.bare false; git reset --mixed HEAD
 
