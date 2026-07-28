@@ -3,7 +3,7 @@ ENV SHYNUR_DOCKER_IDE=1
 SHELL ["/bin/bash", "-c"]
 RUN { apt update && apt install -y ca-certificates; } >/dev/null
 RUN sed -i 's|^URIs: https\?://[^ ]\+\?\.ubuntu\.com/ubuntu/$|URIs: https://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources
-RUN apt update >/dev/null
+RUN apt update >/dev/null && apt upgrade -y >/dev/null
 ENV DEBIAN_FRONTEND=noninteractive
 
 # --------------------------------
@@ -223,3 +223,11 @@ COPY --from=golang-builder /root/go/ /root/go/
 
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
+
+# ---------------------------------------
+
+FROM dev AS tidy-dev
+RUN apt autopurge && apt clean
+RUN rm -rf /tmp/*
+RUN rm -rf ~/.cache
+
