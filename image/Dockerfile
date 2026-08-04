@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # --------------------------------
 
 FROM scratch AS version-builder
-COPY ./VERSION /VERSION
+COPY ./VERSION /
 
 # --------------------------------
 
@@ -221,6 +221,7 @@ COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
 COPY --from=golang-builder /root/go/ /root/go/
 
+COPY ./startup-ide-for-shynur.bash /usr/local/bin/
 WORKDIR /root/
 CMD ["/bin/bash", "-l"]
 
