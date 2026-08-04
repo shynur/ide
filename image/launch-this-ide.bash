@@ -1,4 +1,5 @@
 #!/bin/bash -l
+PS1=force_eval . ~/.bashrc
 
 MY_MIHOMO_PORT=7890
 if my-mihomo.bash up &>/dev/null; then
