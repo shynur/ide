@@ -227,7 +227,6 @@ CMD ["/bin/bash", "-l"]
 # ---------------------------------------
 
 FROM dev AS tidy-dev
-RUN apt autopurge && apt clean
+RUN apt autopurge -y >/dev/null; apt clean -y >/dev/null
 RUN rm -rf /tmp/*
 RUN rm -rf ~/.cache
-
