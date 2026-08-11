@@ -10,6 +10,9 @@ fi
 
 apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file &>/dev/null &
 
+git config --global credential.helper "cache --timeout=$[2**31-1]"
+sed 's|^https://\([^:]*\):\([^@]*\)@\(.*\)$|protocol=https\nhost=\3\nusername=\1\npassword=\2|' ~/.git-credentials | git credential approve
+
 kimi --auto web --host --allow-remote-terminals --dangerous-bypass-auth --no-open &
 /usr/sbin/sshd -D
 
