@@ -8,7 +8,7 @@ if my-mihomo.bash up &>/dev/null; then
     echo "export http_proxy=http://127.0.0.1:$MY_MIHOMO_PORT https_proxy=http://127.0.0.1:$MY_MIHOMO_PORT all_proxy=socks5h://127.0.0.1:$MY_MIHOMO_PORT" >>/etc/profile
 fi
 
-apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file &>/dev/null &
+apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file xxd &>/dev/null &
 
 git config --global credential.helper "cache --timeout=$[2**31-1]"
 echo >>~/.git-credentials
