@@ -185,6 +185,11 @@ RUN chmod a+x /usr/local/bin/mihomo-*
 RUN cd /usr/local/bin; ln -s mihomo-* mihomo
 RUN PATH+=:~/.local/bin fetch-mihomo-geodata.bash
 
+# 安装 VS Code
+RUN apt install -y debconf wget >/dev/null
+RUN echo 'code code/add-microsoft-repo boolean true' | sudo debconf-set-selections
+RUN cd `mktemp -d`; wget -q -O vscode.deb 'https://go.microsoft.com/fwlink/?LinkID=760868'; apt install -y ./*.deb >/dev/null
+
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
