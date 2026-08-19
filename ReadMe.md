@@ -180,6 +180,20 @@ GNU Emacs 30.2
 如果提供这个文件, 会自动填充到预备好的 [YAML 模板](https://github.com/shynur/HOME/blob/trunk/.config/mihomo/template.yaml) 中, 供 mihomo 使用.
 如果成功用此配置启动 mihomo, 则自动设置容器内所有命令的代理.
 
+## Web 服务
+
+### Kimi Web
+
+> 需要使用 systemd service 方式启动 container.
+
+打开 <http://localhost:58628> 进入 Kimi Web 版.
+
+### VS Code
+
+> 需要使用 systemd service 方式启动 container.
+
+打开 <http://localhost:28000> 进入 Web UI 版 VS Code.
+
 ## 镜像源
 
 软件包的源已替换成国内的镜像.
