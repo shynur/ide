@@ -21,3 +21,4 @@ node -v
 python3 --version
 mihomo --help
 kimi --version
+code --version
