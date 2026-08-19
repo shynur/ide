@@ -162,7 +162,7 @@ GNU Emacs 30.2
 
 打开 <http://localhost:28000> 进入 Web UI 版 VS Code.
 
-<img width="2559" height="1312" alt="image" src="https://github.com/user-attachments/assets/806a7d99-46df-437d-83c0-b9d1ac92c4db" />
+<img width="2559" height="1312" alt="image" src="https://github.com/user-attachments/assets/b5d0e336-62e1-4bf3-b492-b344b2ad22c1" />
 
 ## 镜像源
 
