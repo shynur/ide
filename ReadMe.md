@@ -40,47 +40,17 @@
 - 显示彩色
 - 根据文件类型显示后缀
 
-## 登录
+## 如何进入 container
 
-### 直接运行
+### 启动
 
-```bash
-docker run  \
-  --rm -it                                         \
-  -v ~/.git-credentials:/root/.git-credentials:ro  \
-  -v /etc/shynur-ide/:/etc/shynur-ide/:ro          \
-  -v ~/.conan2/p/:/root/.conan2/p/                 \
-  docker.cnb.cool/shynur/ide
-```
+请参考 [`/etc/systemd/system/shynur-ide.service`](./shynur-ide.service).
 
 ### SSH
 
-(以 TCP 端口号 22222 为例.)
-
-在任意 shell session 执行以下命令 (之后可以关闭该 session):
-
 ```bash
-docker run  \
-  --rm -d                                          \
-  -p 22222:22                                      \
-  -v ~/.git-credentials:/root/.git-credentials:ro  \
-  -v ~/.conan2/p/:/root/.conan2/p/                 \
-  -v /etc/shynur-ide/:/etc/shynur-ide/:ro          \
-  docker.cnb.cool/shynur/ide /usr/sbin/sshd -D
+ssh -p 22222 root@宿主机IP
 ```
-
-如果是同主机, 可以用
-
-```bash
-ssh -p 22222 root@localhost
-```
-
-或者从外部 SSH 进去.
-
-### systemd
-
-开机时自动更新 image 并启动它作为 SSH server.
-See [`/etc/systemd/system/shynur-ide.service`](./shynur-ide.service).
 
 ## 开发工具
 ### 前沿的工具链
