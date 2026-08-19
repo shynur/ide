@@ -98,6 +98,15 @@ RUN . ~/.cargo/env; rustup component add rust-analyzer
 
 # --------------------------------
 
+FROM base AS vscode-builder
+RUN apt install -y wget git tar gzip >/dev/null
+WORKDIR /tmp
+RUN wget -q -O vscode.tar.gz "https://update.code.visualstudio.com/`git ls-remote --tags --refs https://github.com/microsoft/vscode.git 'refs/tags/1.*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/cli-linux-`sed -e s/'^x86_64$'/x64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`/stable"
+RUN tar xf ./*.tar.gz
+RUN mv code /usr/local/bin/
+
+# --------------------------------
+
 FROM base AS homedir-builder
 RUN apt install -y git curl >/dev/null
 
@@ -185,15 +194,13 @@ RUN chmod a+x /usr/local/bin/mihomo-*
 RUN cd /usr/local/bin; ln -s mihomo-* mihomo
 RUN PATH+=:~/.local/bin fetch-mihomo-geodata.bash
 
-# 安装 VS Code
-RUN apt install -y debconf wget >/dev/null
-RUN debconf-set-selections <<<'code code/add-microsoft-repo boolean true'
-RUN cd `mktemp -d`; wget -q -O vscode.deb 'https://go.microsoft.com/fwlink/?LinkID=760868'; apt install -y ./*.deb >/dev/null
-
 # 安装 CMake
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/cmake/bin"
+
+# 安装 VS Code
+COPY --from=vscode-builder /usr/local/bin/code /usr/local/bin/
 
 # 安装 GCC
 COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
