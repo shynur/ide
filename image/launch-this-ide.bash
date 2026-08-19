@@ -27,6 +27,13 @@ done <~/.git-credentials
     kimi --auto web --host --allow-remote-terminals --dangerous-bypass-auth --no-open &
 )
 
+(
+    if [ $MY_MIHOMO_UP ]; then
+        export http_proxy=http://127.0.0.1:$MY_MIHOMO_PORT https_proxy=http://127.0.0.1:$MY_MIHOMO_PORT all_proxy=socks5h://127.0.0.1:$MY_MIHOMO_PORT
+    fi
+    code --no-sandbox --locale zh-CN serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
+)
+
 /usr/sbin/sshd -D
 
 wait
