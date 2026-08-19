@@ -154,17 +154,15 @@ GNU Emacs 30.2
 
 ### Kimi Web
 
-> 需要使用 systemd service 方式启动 container.
-
 打开 <http://localhost:58628> 进入 Kimi Web 版.
 
 <img width="2559" height="1309" alt="image" src="https://github.com/user-attachments/assets/4414f1c5-22ab-4d8d-96fd-225b286bdc47" />
 
 ### VS Code
 
-> 需要使用 systemd service 方式启动 container.
-
 打开 <http://localhost:28000> 进入 Web UI 版 VS Code.
+
+<img width="2559" height="1312" alt="image" src="https://github.com/user-attachments/assets/806a7d99-46df-437d-83c0-b9d1ac92c4db" />
 
 ## 镜像源
 
