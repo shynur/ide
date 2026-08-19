@@ -187,7 +187,7 @@ RUN PATH+=:~/.local/bin fetch-mihomo-geodata.bash
 
 # 安装 VS Code
 RUN apt install -y debconf wget >/dev/null
-RUN echo 'code code/add-microsoft-repo boolean true' | sudo debconf-set-selections
+RUN debconf-set-selections <<<'code code/add-microsoft-repo boolean true'
 RUN cd `mktemp -d`; wget -q -O vscode.deb 'https://go.microsoft.com/fwlink/?LinkID=760868'; apt install -y ./*.deb >/dev/null
 
 # 安装 CMake
