@@ -35,5 +35,3 @@ done <~/.git-credentials
 )
 
 /usr/sbin/sshd -D
-
-wait
