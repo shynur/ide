@@ -49,5 +49,6 @@ done <~/.git-credentials
 if [ $SHYNUR_IDE_SSH_SERVER_MODE ]; then
     /usr/sbin/sshd -D
 else
+    cd
     bash -l
 fi
