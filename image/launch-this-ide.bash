@@ -1,7 +1,13 @@
 #!/bin/bash -l
-PS1=force_eval . ~/.bashrc
-
 chmod a-x -- "$0"
+
+while getopts ':d' opt; do
+    case $opt in
+        d) SHYNUR_IDE_SSH_SERVER_MODE=1 ;;
+    esac
+done
+
+PS1=force_eval . ~/.bashrc
 
 MY_MIHOMO_PORT=7890
 if my-mihomo.bash up &>/dev/null; then
@@ -40,4 +46,8 @@ done <~/.git-credentials
     code --locale zh-CN serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
 )
 
-/usr/sbin/sshd -D
+if [ $SHYNUR_IDE_SSH_SERVER_MODE ]; then
+    /usr/sbin/sshd -D
+else
+    bash -l
+fi
