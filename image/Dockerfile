@@ -233,8 +233,7 @@ ENV PATH="$PATH:/usr/local/go/bin"
 COPY --from=golang-builder /root/go/ /root/go/
 
 COPY ./launch-this-ide.bash /usr/local/bin/
-WORKDIR /root/
-CMD ["/bin/bash", "-l"]
+CMD ["/usr/bin/env", "launch-this-ide.bash", "-d"]
 
 # ---------------------------------------
 
