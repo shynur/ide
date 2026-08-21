@@ -42,15 +42,18 @@
 
 ## 如何进入 container
 
-### 启动
+### SSH server mode
 
 请参考 [`/etc/systemd/system/shynur-ide.service`](./shynur-ide.service).
+使用 `ssh -p 22222 root@宿主机IP` 登入.
 
-### SSH
+### 直接运行
 
 ```bash
-ssh -p 22222 root@宿主机IP
+docker run -it docker.cnb.cool/shynur/ide
 ```
+
+可根据需要挂载相应的文件/目录, 参考 [`/etc/systemd/system/shynur-ide.service`](./shynur-ide.service).
 
 ## 开发工具
 ### 前沿的工具链
