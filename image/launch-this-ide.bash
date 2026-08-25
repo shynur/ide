@@ -1,5 +1,4 @@
 #!/bin/bash -l
-chmod a-x -- "$0"
 
 while getopts ':d' opt; do
     case $opt in
