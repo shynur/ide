@@ -34,7 +34,7 @@ done <~/.git-credentials
         export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY
         export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
     fi
-    kimi --auto web --network --public --no-restrict-sensitive-apis --allow-remote-terminals --dangerous-bypass-auth --dangerously-omit-auth --no-open --port 58627 &
+    kimi --auto web --host --allow-remote-terminals --dangerous-bypass-auth --no-open --port 58627 --allowed-host sgp1.shynur.fun &
 )
 
 (
