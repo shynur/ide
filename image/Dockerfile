@@ -108,30 +108,16 @@ RUN mv code /usr/local/bin/
 # --------------------------------
 
 FROM base AS homedir-builder
-RUN apt install -y git curl >/dev/null
+RUN apt install -y git curl 2>/dev/null
 
 COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
 
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
-RUN touch /root/.hushlogin
-COPY HOME/.config/      /root/.config/
-COPY HOME/.bash_profile /root/
-RUN rm -f ~/.profile
-COPY HOME/.profile.py   /root/
-COPY HOME/.bashrc       /root/
+RUN rm -rf ~/*; rm -rf ~/.*
+COPY HOME/ /root/
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
-COPY HOME/.inputrc      /root/
-COPY HOME/.conan2/      /root/.conan2/
-COPY HOME/.ssh/         /root/.ssh/
-COPY HOME/.github/      /root/.github/
-COPY HOME/.copilot/     /root/.copilot/
-COPY HOME/.codex/       /root/.codex/
-COPY HOME/.gemini/      /root/.gemini/
-COPY HOME/.claude/      /root/.claude/
-COPY HOME/.kimi-code/   /root/.kimi-code/
-COPY HOME/.local/bin/   /root/.local/bin/
 RUN cd ~/.config/emacs; rm -rf .git; git clone --bare --depth=1 --branch=trunk https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git config core.bare false; git reset --mixed HEAD
 
 # ---------------------------------
