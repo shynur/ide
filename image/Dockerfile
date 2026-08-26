@@ -112,6 +112,7 @@ RUN apt install -y git curl 2>/dev/null
 
 RUN rm -rf ~/*; rm -rf ~/.*
 COPY HOME/ /root/
+RUN rm -rf ~/.git
 COPY --from=nvm-builder    /root/.nvm/    /root/.nvm/
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
