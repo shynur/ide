@@ -110,13 +110,12 @@ RUN mv code /usr/local/bin/
 FROM base AS homedir-builder
 RUN apt install -y git curl 2>/dev/null
 
-COPY --from=nvm-builder /root/.nvm/ /root/.nvm/
-
+RUN rm -rf ~/*; rm -rf ~/.*
+COPY HOME/ /root/
+COPY --from=nvm-builder    /root/.nvm/    /root/.nvm/
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
-RUN rm -rf ~/*; rm -rf ~/.*
-COPY HOME/ /root/
 RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
 RUN cd ~/.config/emacs; rm -rf .git; git clone --bare --depth=1 --branch=trunk https://github.com/shynur/.emacs.d.git .git; git --git-dir=.git config core.bare false; git reset --mixed HEAD
 
