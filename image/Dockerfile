@@ -194,6 +194,11 @@ COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 RUN echo 'export PATH+=:/opt/cmake/bin' >>/etc/profile
 ENV PATH="$PATH:/opt/cmake/bin"
 
+# 安装 CMake
+COPY --from=code-server-builder /opt/code-server/ /opt/code-server/
+RUN echo 'export PATH+=:/opt/code-server/bin' >>/etc/profile
+ENV PATH="$PATH:/opt/code-server/bin"
+
 # 安装 VS Code
 COPY --from=vscode-builder /usr/local/bin/code /usr/local/bin/
 
