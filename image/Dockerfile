@@ -107,8 +107,18 @@ RUN mv code /usr/local/bin/
 
 # --------------------------------
 
+FROM base AS code-server-builder
+RUN apt install -y git tar gzip curl >/dev/null
+RUN mkdir -p /opt/code-server/{bin,lib}
+WORKDIR /opt/code-server
+RUN CODE_SERVER_VERSION=`git ls-remote --tags --refs https://github.com/coder/code-server.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; curl -fL https://github.com/coder/code-server/releases/download/v$CODE_SERVER_VERSION/code-server-$CODE_SERVER_VERSION-linux-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz | tar -C ./lib -xz
+RUN cd lib; CODE_SERVER_LIB=$(ls code-server-*-linux-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`); mv CODE_SERVER_LIB ${CODE_SERVER_LIB%-linux-*}
+RUN ln -s lib/code-server-*/bin/code-server bin/code-server
+
+# --------------------------------
+
 FROM base AS homedir-builder
-RUN apt install -y git curl 2>/dev/null
+RUN apt install -y git curl >/dev/null
 
 RUN rm -rf ~/*; rm -rf ~/.*
 COPY HOME/ /root/
