@@ -35,14 +35,8 @@ done <~/.git-credentials
         export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
     fi
     kimi --auto web --host --allow-remote-terminals --dangerous-bypass-auth --no-open --port 58627 --allowed-host sgp1.shynur.fun &
-)
-
-(
-    if [ $MY_MIHOMO_UP ]; then
-        export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY
-        export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
-    fi
     code serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
+    #code-server --auth none --disable-telemetry --disable-update-check --skip-auth-preflight --disable-workspace-trust --bind-addr 0.0.0.0:<PORT> --trusted-origins sgp1.shynur.fun &
 )
 
 if [ $SHYNUR_IDE_SSH_SERVER_MODE ]; then
