@@ -18,7 +18,7 @@ if my-mihomo.bash up &>/dev/null; then
     } >>/etc/profile
 fi
 
-apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file git-lfs xxd git-lfs >/dev/null &
+apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file git-lfs xxd >/dev/null &
 
 git lfs install
 
