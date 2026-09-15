@@ -124,7 +124,7 @@ COPY --from=nvm-builder    /root/.nvm/    /root/.nvm/
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
-RUN echo '. ~/.local/bin/shynur-ide-setup-ai-sk.bash' >>/root/.bashrc
+RUN echo '~/.local/bin/shynur-ide-setup-ai-sk.bash' >>/root/.bashrc
 
 # ---------------------------------
 
