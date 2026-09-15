@@ -234,14 +234,6 @@ RUN PATH+=:~/.local/bin conan profile detect --force
 RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                                                        ~/.conan2/profiles/default
 COPY --from=cppstd-getter /root/latest-cppstd.txt /tmp/
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`cat /tmp/latest-cppstd.txt`/ ~/.conan2/profiles/default
-RUN cat <<'EOF' >>~/.conan2/profiles/default
-#[conf]
-#tools.build:cflags=["-O0", "-g0"]
-#tools.build:cxxflags=["-O0", "-g0"]
-#tools.build:sharedlinkflags=["-g0"]
-#tools.build:exelinkflags=["-g0"]
-#tools.cmake.cmaketoolchain:extra_variables={ "CMAKE_C_FLAGS_DEBUG": "-g0", "CMAKE_CXX_FLAGS_DEBUG": "-g0" }
-EOF
 
 # 安装 AI CLI
 RUN . ~/.nvm/nvm.sh; npm install -g `#@anthropic-ai/claude-code` `#@openai/codex` @moonshot-ai/kimi-code `#@google/gemini-cli` `#@github/copilot`; rm -rf /tmp/node-compile-cache
