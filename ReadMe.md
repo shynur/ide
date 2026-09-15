@@ -112,8 +112,8 @@ GNU Emacs 30.2
 按照如下格式:
 
 ```sh
-SEER_AI_SK='<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>'
-ALIBABA_BAILIAN_SK=''  # base URL: https://dashscope.aliyuncs.com/compatible-mode/v1
+AI_SEER='<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>'
+AI_ALIBABA_BAILIAN=''  # base URL: https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
 映射到容器内的 `/etc/shynur-ide/ai-sk.sh` 即可自动完成注册.
