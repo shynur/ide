@@ -128,6 +128,24 @@ RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.jso
 
 # ---------------------------------
 
+FROM base AS cppstd-getter
+RUN apt install -y `apt search --names-only '^g\+\+-[0-9]+$' | grep '^g++-[0-9]\+' | awk -F/ '{print $1}' | sort -Vr | head -n 1` >/dev/null
+RUN <<'EOF'
+    {
+        CXX=`ls -1 /usr/bin/g++-* | grep '/g++-[0-9]\+$' | sort -Vr | head -n 1`
+        for ((cppstd=26+30; cppstd>=11; cppstd-=3)); do
+            if $CXX -E -std=c++$cppstd <(echo 'int i;') &>/dev/null; then
+                echo $cppstd
+                exit
+            fi
+        done
+        echo 11
+        echo '未探测到最新的 C++ 标准' >&2
+    } | head -n 1 >|~/latest-cppstd.txt
+EOF
+
+# ---------------------------------
+
 FROM base AS etcdir-builder
 RUN apt install -y git >/dev/null
 WORKDIR /tmp
@@ -214,7 +232,8 @@ RUN PATH+=:~/.local/bin pipx install conan
 ENV PATH="$PATH:/root/.local/bin"
 RUN PATH+=:~/.local/bin conan profile detect --force
 RUN sed -i s/'^build_type=.\+$'/build_type=Debug/                                                        ~/.conan2/profiles/default
-RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`~/.local/bin/latest-available-cppstd-of.bash c++`/ ~/.conan2/profiles/default
+COPY --from=cppstd-getter /root/latest-cppstd.txt /tmp/
+RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`cat /tmp/latest-cppstd.txt`/ ~/.conan2/profiles/default
 RUN cat <<'EOF' >>~/.conan2/profiles/default
 #[conf]
 #tools.build:cflags=["-O0", "-g0"]
