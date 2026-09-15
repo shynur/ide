@@ -124,7 +124,7 @@ COPY --from=nvm-builder    /root/.nvm/    /root/.nvm/
 COPY --from=rustup-builder /root/.rustup/ /root/.rustup/
 COPY --from=rustup-builder /root/.cargo/  /root/.cargo/
 
-RUN echo '. ~/.local/bin/alias-with-secrets.bash /etc/shynur-ide/ai-api-keys.json' >>/root/.bashrc
+RUN echo '. ~/.local/bin/shynur-ide-setup-ai-sk.bash' >>/root/.bashrc
 
 # ---------------------------------
 
