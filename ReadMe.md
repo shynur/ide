@@ -154,7 +154,7 @@ AI_ALIBABA_BAILIAN=''  # base URL: https://dashscope.aliyuncs.com/compatible-mod
 ## 镜像源
 
 软件包的源已替换成国内的镜像.
-(例如, apt, npm, pip.)
+(例如, apt, npm, pip, go.)
 
 ____________________________
 
