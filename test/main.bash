@@ -7,18 +7,18 @@ cd `dirname $0`
 . ~/.nvm/nvm.sh
 
 
-cargo version
-claude -v
 cmake --version
-codex --version
+cargo version
 conan -v
-#copilot -v
 emacs -version
 g++ -v
-#gemini -v
 go version
 node -v
 python3 --version
 mihomo --help
-kimi --version
 code --version
+#claude -v
+#codex --version
+#copilot -v
+#gemini -v
+kimi --version
