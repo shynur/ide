@@ -109,30 +109,14 @@ GNU Emacs 30.2
 
 ## AI Coder CLI
 
-内置 Codex / Copilot / Gemini / Claude CLI.
-
 按照如下格式:
 
-```json
-{
-  "ANTHROPIC_API_KEY": "<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>",
-  "OPENAI_API_KEY": "",
-  "GEMINI_API_KEY": "",
-  "GITHUB_TOKEN": "",
-  "KIMI_ALIBABA_BAILIAN_API_KEY": ""
-}
+```sh
+SEER_AI_SK='<你的 key/token; 若 删除该行 或 值为空字符串, 则无效>'
+ALIBABA_BAILIAN_SK=''  # base URL: https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
-映射到容器内的 `/etc/shynur-ide/ai-api-keys.json` 即可自动完成注册.
-
-> [!NOTE]
-> 密钥并未存储在环境变量中.
-> 仅当调用指定 AI Coder CLI 时会针对该进程设置密钥.
-
-> [!NOTE]
-> Codex / Gemini 默认使用中转站 <https://aicodemirror.com>.  <br />
-> Claude 默认使用中转站 <https://llmapi.pro>.  <br />
-> Kimi 使用 <https://dashscope.aliyuncs.com/compatible-mode/v1>.
+映射到容器内的 `/etc/shynur-ide/ai-sk.sh` 即可自动完成注册.
 
 ## 梯子🪜
 
