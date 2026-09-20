@@ -68,8 +68,15 @@ jobs:
         - name: Copy to docker.cnb.cool
           run: |
             SHYNUR_IDE_IMAGE=${{ github.repository_owner }}/${{ github.event.repository.name }}
-            docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:x64   $SHYNUR_IDE_IMAGE:x64
-            docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:arm64 $SHYNUR_IDE_IMAGE:arm64
+            # CNB 制品库拒绝 attestation manifest (artifact type "UNKNOWN"),
+            # 因此只复制 index 中平台为 linux 的镜像 manifest, 跳过 attestation.
+            for ARCH in x64 arm64; do
+                DIGEST=$(
+                    docker buildx imagetools inspect --raw $SHYNUR_IDE_IMAGE:$ARCH |
+                    jq -r '.manifests[] | select(.platform.os == "linux") | .digest'
+                )
+                docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:$ARCH $SHYNUR_IDE_IMAGE:$ARCH@$DIGEST
+            done
   merge:
     needs:
       - build
