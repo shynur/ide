@@ -65,17 +65,22 @@ jobs:
             registry: docker.cnb.cool
             username: cnb
             password: ${{ secrets.CNBCOOL_TOKEN }}
+        - name: Install crane
+          run: |
+            go install github.com/google/go-containerregistry/cmd/crane@latest
+            echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
         - name: Copy to docker.cnb.cool
           run: |
             SHYNUR_IDE_IMAGE=${{ github.repository_owner }}/${{ github.event.repository.name }}
-            # CNB 制品库拒绝 attestation manifest (artifact type "UNKNOWN"),
-            # 因此只复制 index 中平台为 linux 的镜像 manifest, 跳过 attestation.
+            # CNB 制品库拒绝 attestation manifest (artifact type "UNKNOWN"), 而
+            # buildx imagetools create 总会通过 referrers API 连同 attestation 一起复制,
+            # 因此改用 crane copy, 只复制 index 中平台为 linux 的镜像 manifest.
             for ARCH in x64 arm64; do
                 DIGEST=$(
                     docker buildx imagetools inspect --raw $SHYNUR_IDE_IMAGE:$ARCH |
                     jq -r '.manifests[] | select(.platform.os == "linux") | .digest'
                 )
-                docker buildx imagetools create -t docker.cnb.cool/$SHYNUR_IDE_IMAGE:$ARCH $SHYNUR_IDE_IMAGE:$ARCH@$DIGEST
+                crane copy $SHYNUR_IDE_IMAGE:$ARCH@$DIGEST docker.cnb.cool/$SHYNUR_IDE_IMAGE:$ARCH
             done
   merge:
     needs:
