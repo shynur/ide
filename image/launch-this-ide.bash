@@ -49,7 +49,7 @@ done <~/.git-credentials
             fi
         fi
         kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run &
-        socat TCP-LISTEN:10086,bind=0.0.0.0,fork,reuseaddr TCP:127.0.0.1:10086 </dev/null &
+        socat TCP-LISTEN:10087,bind=0.0.0.0,fork,reuseaddr TCP:127.0.0.1:10086 </dev/null &
     )
     code serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
     #code-server --auth none --disable-telemetry --disable-update-check --skip-auth-preflight --disable-workspace-trust --bind-addr 0.0.0.0:<PORT> --trusted-origins sgp1.shynur.fun &
