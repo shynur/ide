@@ -39,13 +39,13 @@ done <~/.git-credentials
     (
         . /etc/shynur-ide/ai-sk.sh
         if [ "$AI_ALIBABA_BAILIAN" ]; then
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\.alibaba-cn\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\.alibaba-cn\][[:blank:]]*$/a api_key="'"$AI_ALIBABA_BAILIAN"\" ~/.kimi-code/config.toml
+            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\.百炼\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+                sed -i '/^[[:blank:]]*\[providers\.百炼\][[:blank:]]*$/a api_key="'"$AI_ALIBABA_BAILIAN"\" ~/.kimi-code/config.toml
             fi
         fi
         if [ "$AI_SEER" ]; then
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\.seer-openai\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\.seer-openai\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\.仙工-openai\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+                sed -i '/^[[:blank:]]*\[providers\.仙工-openai\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
             fi
         fi
         kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run &
