@@ -3,22 +3,22 @@ set -e
 cd `dirname $0`
 
 
-. ~/.cargo/env
-. ~/.nvm/nvm.sh
-
-
-cmake --version
+#. ~/.cargo/env
 #cargo version
-conan -v
-emacs -version
-g++ -v
-go version
+
+. ~/.nvm/nvm.sh
 node -v
-python3 --version
-mihomo --help
-code --version
+kimi --version
 #claude -v
 #codex --version
 #copilot -v
 #gemini -v
-kimi --version
+
+cmake --version
+conan -v
+emacs -version
+g++ -v
+go version
+python3 --version
+mihomo --help
+code --version
