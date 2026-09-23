@@ -8,7 +8,7 @@ cd `dirname $0`
 
 
 cmake --version
-cargo version
+#cargo version
 conan -v
 emacs -version
 g++ -v
