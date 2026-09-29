@@ -47,6 +47,12 @@ done <~/.git-credentials
             if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-openai"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
                 sed -i '/^[[:blank:]]*\[providers\."\?仙工-openai"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
             fi
+            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-anthropic"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+                sed -i '/^[[:blank:]]*\[providers\."\?仙工-anthropic"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+            fi
+            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-gemini"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+                sed -i '/^[[:blank:]]*\[providers\."\?仙工-gemini"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+            fi
         fi
         kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run &
         (
