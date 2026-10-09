@@ -54,7 +54,10 @@ done <~/.git-credentials
                 sed -i '/^[[:blank:]]*\[providers\."\?仙工-gemini"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
             fi
         fi
-        kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
+        {
+            kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
+            mkdir -p ~/ws/{health,learn-{finance,crypto}}
+        }
         (
             until apt install -y socat >/dev/null; do
                 sleep 2
