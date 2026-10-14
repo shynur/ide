@@ -147,8 +147,6 @@ RUN mkdir -p /etc/bash_completion.d
 RUN git clone --depth=1 https://gitlab.com/akim.saidani/conan-bashcompletion.git
 RUN mv conan-bashcompletion/conan-completion /etc/bash_completion.d
 
-COPY --from=homedir-builder /root/ /etc/skel/
-
 # --------------------------------
 
 FROM base AS ssh-server
@@ -176,6 +174,10 @@ COPY --from=homedir-builder /root/ /root/
 RUN echo $'Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n  GlobalKnownHostsFile /dev/null\n  LogLevel ERROR' >>/root/.ssh/config
 
 RUN /root/.local/bin/chmod-x-useless.bash
+RUN <<'EOF'
+    dpkg-divert --quiet --local --divert /bin/sh.distrib --rename --add /bin/sh
+    ln -sf bash /bin/sh
+EOF
 
 # --------------------------------
 
