@@ -236,7 +236,7 @@ ENV PATH="$PATH:/opt/gcc/bin"
 RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 # 安装 JFrog Conan
-RUN PATH+=:~/.local/bin pipx install conan
+RUN PATH+=:~/.local/bin pipx install conan --pip-args='--no-cache-dir'
 ENV PATH="$PATH:/root/.local/bin"
 RUN PATH+=:~/.local/bin conan profile detect --force
 RUN sed -i s/'^build_type=.\+$'/build_type=Debug/ ~/.conan2/profiles/default
@@ -244,7 +244,11 @@ COPY --from=cppstd-getter /root/latest-cppstd.txt /tmp/
 RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`cat /tmp/latest-cppstd.txt`/ ~/.conan2/profiles/default
 
 # 安装 AI CLI
-RUN . ~/.nvm/nvm.sh; npm install -g `#@anthropic-ai/claude-code` `#@openai/codex` @moonshot-ai/kimi-code `#@google/gemini-cli` `#@github/copilot`; rm -rf /tmp/node-compile-cache
+RUN <<'EOF'
+    . ~/.nvm/nvm.sh
+    npm install -g @moonshot-ai/kimi-code
+    npm cache clean --force
+EOF
 
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
