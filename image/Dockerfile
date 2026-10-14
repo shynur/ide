@@ -17,19 +17,13 @@ COPY ./VERSION /
 # --------------------------------
 
 FROM base AS wget-user
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install wget
-EOF
+RUN { apt update; apt install -y wget; } >/dev/null
 
 # --------------------------------
 
 FROM wget-user AS golang-builder
 
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install git
-EOF
+RUN { apt update; apt install -y git; } >/dev/null
 WORKDIR /tmp
 RUN GO_VERSION=`git ls-remote --tags --refs https://github.com/golang/go.git 'refs/tags/go*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/go'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget https://golang.google.cn/dl/go$GO_VERSION.`sed s/'^linux-gnu$'/linux/ <<<$OSTYPE`-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz &>/dev/null
 RUN tar -C /usr/local -xzf go*.*-*.tar.gz
@@ -40,10 +34,7 @@ RUN go install golang.org/x/tools/gopls@latest
 # --------------------------------
 
 FROM base AS cmake-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install git wget
-EOF
+RUN { apt update; apt install -y git wget; } >/dev/null
 WORKDIR /tmp
 RUN CMAKE_VERSION=`git ls-remote --tags --refs https://github.com/Kitware/CMake.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-$HOSTTYPE.sh
 RUN mkdir -p /opt/cmake; bash ./cmake-*-$HOSTTYPE.sh --skip-license --prefix=/opt/cmake --exclude-subdir
@@ -52,10 +43,7 @@ RUN rm -f /opt/cmake/bin/cmake-gui
 # --------------------------------
 
 FROM base AS gcc-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install g++ wget bzip2 file bison make flex libfl-dev
-EOF
+RUN { apt update; apt install -y g++ wget bzip2 file bison make flex libfl-dev; } >/dev/null
 
 COPY make-gcc/src/ /tmp/make-gcc/src/
 WORKDIR /tmp/make-gcc/src
@@ -76,10 +64,7 @@ RUN ln -s g++ c++
 
 FROM base AS cmake-user
 
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install libc6-dev binutils make
-EOF
+RUN { apt update; apt install -y libc6-dev binutils make; } >/dev/null
 
 COPY --from=cmake-builder /opt/cmake/ /opt/cmake/
 ENV PATH="$PATH:/opt/cmake/bin"
@@ -87,30 +72,21 @@ ENV PATH="$PATH:/opt/cmake/bin"
 # --------------------------------
 
 FROM base AS nvm-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install curl git
-EOF
+RUN { apt update; apt install -y curl git; } >/dev/null
 RUN curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v`git ls-remote --tags --refs https://github.com/nvm-sh/nvm.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/install.sh | bash
 RUN . ~/.nvm/nvm.sh; nvm install --lts 2>/dev/null
 
 # --------------------------------
 
 FROM base AS rustup-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install curl
-EOF
+RUN { apt update; apt install -y curl; } >/dev/null
 RUN exec -a sh bash <(curl -sSf https://sh.rustup.rs) -q -y
 RUN . ~/.cargo/env; rustup component add rust-analyzer
 
 # --------------------------------
 
 FROM base AS vscode-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install wget git tar gzip
-EOF
+RUN { apt update; apt install -y wget git tar gzip; } >/dev/null
 WORKDIR /tmp
 RUN wget -q -O vscode.tar.gz "https://update.code.visualstudio.com/`git ls-remote --tags --refs https://github.com/microsoft/vscode.git 'refs/tags/1.*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`/cli-linux-`sed -e s/'^x86_64$'/x64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`/stable"
 RUN tar xf ./*.tar.gz
@@ -119,10 +95,7 @@ RUN mv code /usr/local/bin/
 # --------------------------------
 
 FROM base AS code-server-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install git tar gzip curl
-EOF
+RUN { apt update; apt install -y git tar gzip curl; } >/dev/null
 RUN mkdir -p /opt/code-server/{bin,lib}
 WORKDIR /opt/code-server
 RUN CODE_SERVER_VERSION=`git ls-remote --tags --refs https://github.com/coder/code-server.git 'refs/tags/v*' | sed -E s/'^[[:xdigit:]]+[[:space:]]+refs\/tags\/v'// | egrep '^[0-9]+(\.[0-9]+)*$' | sort -V -r | head -1`; curl -sfL https://github.com/coder/code-server/releases/download/v$CODE_SERVER_VERSION/code-server-$CODE_SERVER_VERSION-linux-`sed -e s/'^x86_64$'/amd64/ -e s/'^aarch64$'/arm64/ <<<$HOSTTYPE`.tar.gz | tar -C ./lib -xz
@@ -132,10 +105,7 @@ RUN cd bin; ln -s ../lib/code-server-*/bin/code-server code-server
 # --------------------------------
 
 FROM base AS homedir-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install git curl
-EOF
+RUN { apt update; apt install -y git curl; } >/dev/null
 
 RUN rm -rf ~/*; rm -rf ~/.*
 COPY HOME/ /root/
@@ -151,7 +121,6 @@ RUN <<'EOF'
     {
         apt update
         apt install -y `apt search --names-only '^g\+\+-[0-9]+$' | grep '^g++-[0-9]\+' | awk -F/ '{print $1}' | sort -Vr | head -n 1`
-        apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*
     } >/dev/null
 EOF
 RUN <<'EOF'
@@ -171,10 +140,7 @@ EOF
 # ---------------------------------
 
 FROM base AS etcdir-builder
-RUN <<'EOF'
-    apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
-    apt_install git
-EOF
+RUN { apt update; apt install -y git; } >/dev/null
 WORKDIR /tmp
 
 RUN mkdir -p /etc/bash_completion.d
