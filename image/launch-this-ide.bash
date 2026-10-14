@@ -8,6 +8,8 @@ done
 
 PS1=force_eval . ~/.bashrc
 
+apt update -y
+
 MY_MIHOMO_PORT=7890
 if my-mihomo.bash up &>/dev/null; then
     MY_MIHOMO_UP=1
@@ -18,8 +20,7 @@ if my-mihomo.bash up &>/dev/null; then
     } >>/etc/profile
 fi
 
-apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file git-lfs xxd >/dev/null &
-
+apt install -y git-lfs >/dev/null
 git lfs install
 
 git config --global credential.helper "cache --timeout=$[2**31-1]"
@@ -68,6 +69,8 @@ done <~/.git-credentials
     code serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
     #code-server --auth none --disable-telemetry --disable-update-check --skip-auth-preflight --disable-workspace-trust --bind-addr 0.0.0.0:<PORT> --trusted-origins sgp1.shynur.fun &
 )
+
+apt install -y sshpass gh {un,}zip zstd xz-utils jq rsync ripgrep file xxd >/dev/null &
 
 if [ $SHYNUR_IDE_SSH_SERVER_MODE ]; then
     /usr/sbin/sshd -D
