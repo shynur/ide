@@ -10,14 +10,18 @@ PS1=force_eval . ~/.bashrc
 
 apt update -y
 
+apt install -y curl
 MY_MIHOMO_PORT=7890
 if my-mihomo.bash up &>/dev/null; then
     MY_MIHOMO_UP=1
     MY_MIHOMO_HTTP_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_HTTPS_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_ALL_PROXY=socks5h://127.0.0.1:$MY_MIHOMO_PORT
-    {
-        echo "export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY"
-        echo 'export HTTP_PROXY=$http_proxy HTTPS_PROXY=$https_proxy ALL_PROXY=$all_proxy'
-    } >>/etc/profile
+    if [ "`http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY curl ip.sb`" ]; then
+        MY_MIHOMO_GOOD=1
+        {
+            echo "export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY"
+            echo 'export HTTP_PROXY=$http_proxy HTTPS_PROXY=$https_proxy ALL_PROXY=$all_proxy'
+        } >>/etc/profile
+    fi
 fi
 
 apt install -y git-lfs >/dev/null
@@ -33,39 +37,43 @@ while IFS= read -r url; do
 done <~/.git-credentials
 
 (
-    if [ $MY_MIHOMO_UP ]; then
+    . /etc/shynur-ide/ai-sk.sh
+    if [ "$AI_ALIBABA_BAILIAN" ]; then
+        if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?百炼"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+            sed -i '/^[[:blank:]]*\[providers\."\?百炼"\?\][[:blank:]]*$/a api_key="'"$AI_ALIBABA_BAILIAN"\" ~/.kimi-code/config.toml
+        fi
+    fi
+    if [ "$AI_SEER" ]; then
+        if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-openai"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+            sed -i '/^[[:blank:]]*\[providers\."\?仙工-openai"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+        fi
+        if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-anthropic"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+            sed -i '/^[[:blank:]]*\[providers\."\?仙工-anthropic"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+        fi
+        if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-gemini"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
+            sed -i '/^[[:blank:]]*\[providers\."\?仙工-gemini"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
+        fi
+    fi
+)
+(
+    if [ $MY_MIHOMO_GOOD ]; then
         export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY
         export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
     fi
-    (
-        . /etc/shynur-ide/ai-sk.sh
-        if [ "$AI_ALIBABA_BAILIAN" ]; then
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?百炼"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\."\?百炼"\?\][[:blank:]]*$/a api_key="'"$AI_ALIBABA_BAILIAN"\" ~/.kimi-code/config.toml
-            fi
-        fi
-        if [ "$AI_SEER" ]; then
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-openai"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\."\?仙工-openai"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
-            fi
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-anthropic"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\."\?仙工-anthropic"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
-            fi
-            if ! grep -Pzq '(?m)^[[:blank:]]*\[providers\."?仙工-gemini"?\][[:blank:]]*\napi_key[[:blank:]]*=' ~/.kimi-code/config.toml; then
-                sed -i '/^[[:blank:]]*\[providers\."\?仙工-gemini"\?\][[:blank:]]*$/a api_key="'"$AI_SEER"\" ~/.kimi-code/config.toml
-            fi
-        fi
-        {
-            kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
-            mkdir -p ~/ws/{health,learn-{finance,crypto}}
-        }
-        (
-            until apt install -y socat >/dev/null; do
-                sleep 2
-            done
-            socat TCP-LISTEN:10087,bind=0.0.0.0,fork,reuseaddr TCP:127.0.0.1:10086 </dev/null
-        ) &
-    )
+    kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
+)
+mkdir -p ~/ws/{health,learn-{finance,crypto}}
+{
+    until apt install -y socat >/dev/null; do
+        sleep 2
+    done
+    socat TCP-LISTEN:10087,bind=0.0.0.0,fork,reuseaddr TCP:127.0.0.1:10086 </dev/null
+} &
+(
+    if [ $MY_MIHOMO_GOOD ]; then
+        export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY
+        export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
+    fi
     code serve-web --host 0.0.0.0 --without-connection-token --accept-server-license-terms --disable-telemetry --port 8000 &
     #code-server --auth none --disable-telemetry --disable-update-check --skip-auth-preflight --disable-workspace-trust --bind-addr 0.0.0.0:<PORT> --trusted-origins sgp1.shynur.fun &
 )
