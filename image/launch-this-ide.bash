@@ -15,12 +15,15 @@ MY_MIHOMO_PORT=7890
 if my-mihomo.bash up &>/dev/null; then
     MY_MIHOMO_UP=1
     MY_MIHOMO_HTTP_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_HTTPS_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_ALL_PROXY=socks5h://127.0.0.1:$MY_MIHOMO_PORT
-    if [ "`http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY curl ip.sb`" ]; then
-        MY_MIHOMO_GOOD=1
-        {
-            echo "export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY"
-            echo 'export HTTP_PROXY=$http_proxy HTTPS_PROXY=$https_proxy ALL_PROXY=$all_proxy'
-        } >>/etc/profile
+    apt install -y inetutils-ping
+    if ! [ ping -q -c 4 google.com ]; then
+        if [ "`http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY curl ip.sb`" ]; then
+            MY_MIHOMO_GOOD=1
+            {
+                echo "export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY"
+                echo 'export HTTP_PROXY=$http_proxy HTTPS_PROXY=$https_proxy ALL_PROXY=$all_proxy'
+            } >>/etc/profile
+        fi
     fi
 fi
 
