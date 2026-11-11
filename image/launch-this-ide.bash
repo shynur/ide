@@ -16,7 +16,7 @@ if my-mihomo.bash up &>/dev/null; then
     MY_MIHOMO_UP=1
     MY_MIHOMO_HTTP_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_HTTPS_PROXY=http://127.0.0.1:$MY_MIHOMO_PORT MY_MIHOMO_ALL_PROXY=socks5h://127.0.0.1:$MY_MIHOMO_PORT
     apt install -y inetutils-ping
-    if ! [ ping -q -c 4 google.com ]; then
+    if ! ping -q -c 4 google.com; then
         if [ "`http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY curl ip.sb`" ]; then
             MY_MIHOMO_GOOD=1
             {
