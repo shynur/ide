@@ -249,6 +249,7 @@ RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`cat /tmp/latest-cppstd.txt
 RUN <<'EOF'
     . ~/.nvm/nvm.sh
     npm install -g @moonshot-ai/kimi-code
+    npx -y skills add https://github.com/solana-foundation/solana-dev-skill --skill '*' -y -g
     npm cache clean --force
 EOF
 
