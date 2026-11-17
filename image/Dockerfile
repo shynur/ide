@@ -247,13 +247,19 @@ RUN sed -i s/'^compiler.cppstd=.\+$'/compiler.cppstd=`cat /tmp/latest-cppstd.txt
 
 # 安装 AI CLI
 RUN <<'EOF'
-    . ~/.nvm/nvm.sh
-    npm i -g @moonshot-ai/kimi-code
-    npm cache clean --force
+    bash -lc '
+        npm i -g @moonshot-ai/kimi-code
+        npm cache clean --force
+    '
 EOF
 
 # 安装 yarn
-RUN bash -lc 'npm i -g yarn@1.22.22'
+RUN <<'EOF'
+    bash -lc '
+        npm i -g yarn@1.22.22
+        npm cache clean --force
+    '
+EOF
 
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
@@ -266,9 +272,11 @@ RUN <<'EOF'
     apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
     apt_install build-essential pkg-config libssl-dev libudev-dev llvm libclang-dev protobuf-compiler
     cd `mktemp -d`
-        bash -lc 'CARGO_NET_GIT_FETCH_WITH_CLI=true cargo install --git https://github.com/solana-foundation/anchor --tag v1.1.2 avm'
-        bash -lc 'avm install 1.1.2'
-        bash -lc 'avm use 1.1.2'
+    bash -lc '
+        CARGO_NET_GIT_FETCH_WITH_CLI=true cargo install --git https://github.com/solana-foundation/anchor --tag v1.1.2 avm
+        avm install 1.1.2
+        avm use 1.1.2
+    '
     rm -rf ./* || true; rm -rf ./.* || true;
 EOF
 RUN VERSION=v1.7.0 bash -lc "`curl --proto =https --tlsv1.2 -sSfL https://run.surfpool.run/`"
