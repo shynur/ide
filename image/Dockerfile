@@ -267,7 +267,7 @@ ENV PATH="$PATH:/usr/local/go/bin"
 COPY --from=golang-builder /root/go/ /root/go/
 
 # 安装 Solana 开发环境
-RUN sh -c "`curl -sSfL https://release.anza.xyz/v3.1.10/install`"
+RUN curl -sSfL https://release.anza.xyz/v3.1.10/install | sh
 RUN <<'EOF'
     apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
     apt_install build-essential pkg-config libssl-dev libudev-dev llvm libclang-dev protobuf-compiler
