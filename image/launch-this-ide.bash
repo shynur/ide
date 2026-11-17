@@ -63,6 +63,7 @@ done <~/.git-credentials
         export http_proxy=$MY_MIHOMO_HTTP_PROXY https_proxy=$MY_MIHOMO_HTTPS_PROXY all_proxy=$MY_MIHOMO_ALL_PROXY
         export HTTP_PROXY=$http_proxy           HTTPS_PROXY=$https_proxy           ALL_PROXY=$all_proxy
     fi
+    mv -f ~/.kimi-code/* ~/.kimi-code.mounted/ && rmdir ~/.kimi-code && ln -s ~/.kimi-code.mounted/ ~/.kimi-code
     kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
 )
 mkdir -p ~/ws/{health,learn-{finance,crypto}}
