@@ -228,14 +228,14 @@ ENV PATH="$PATH:/opt/code-server/bin"
 COPY --from=vscode-builder /usr/local/bin/code /usr/local/bin/
 
 # 安装 GCC
-#RUN apt install -y `apt search --names-only '^g\+\+-[0-9]+$' | grep '^g++-[0-9]\+' | awk -F/ '{print $1}' | sort -V -r | head -n 1` >/dev/null
-#RUN CC=`ls -1 /usr/bin/gcc-* | grep '/gcc-[0-9]\+$' | sort -V -r | head -n 1`; CXX=${CC/gcc/g++}; echo "export CC=$CC CXX=$CXX" >>/etc/profile; (cd /usr/local/bin; ln -s $CC gcc; ln -s $CXX g++)
-#RUN cd /usr/local/bin; ln -s gcc cc; ln -s g++ c++
-COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
-RUN echo /opt/gcc/lib64 >/etc/ld.so.conf.d/opt-gcc.conf && ldconfig
-RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
-ENV PATH="$PATH:/opt/gcc/bin"
-RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
+RUN apt install -y `apt search --names-only '^g\+\+-[0-9]+$' | grep '^g++-[0-9]\+' | awk -F/ '{print $1}' | sort -V -r | head -n 1` >/dev/null
+RUN CC=`ls -1 /usr/bin/gcc-* | grep '/gcc-[0-9]\+$' | sort -V -r | head -n 1`; CXX=${CC/gcc/g++}; echo "export CC=$CC CXX=$CXX" >>/etc/profile; (cd /usr/local/bin; ln -s $CC gcc; ln -s $CXX g++)
+RUN cd /usr/local/bin; ln -s gcc cc; ln -s g++ c++
+#COPY --from=gcc-builder   /opt/gcc/   /opt/gcc/
+#RUN echo /opt/gcc/lib64 >/etc/ld.so.conf.d/opt-gcc.conf && ldconfig
+#RUN echo 'export PATH+=:/opt/gcc/bin' >>/etc/profile
+#ENV PATH="$PATH:/opt/gcc/bin"
+#RUN echo 'export CC=/opt/gcc/bin/gcc CXX=/opt/gcc/bin/g++' >>/etc/profile
 
 # 安装 JFrog Conan
 RUN PATH+=:~/.local/bin pipx install conan --pip-args='--no-cache-dir'
@@ -267,7 +267,7 @@ ENV PATH="$PATH:/usr/local/go/bin"
 COPY --from=golang-builder /root/go/ /root/go/
 
 # 安装 Solana 开发环境
-RUN curl -sSfL https://release.anza.xyz/stable/install | sh
+RUN if ! ([ linux-gnu = $OSTYPE ] && [ aarch64 = $HOSTTYPE ]); then curl -sSfL https://release.anza.xyz/stable/install | sh; fi
 RUN <<'EOF'
     apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
     apt_install build-essential pkg-config libssl-dev libudev-dev llvm libclang-dev protobuf-compiler
@@ -277,7 +277,8 @@ RUN <<'EOF'
         avm install latest
         avm use latest
     '
-    rm -rf ./* || true; rm -rf ./.* || true;
+    rm -rf ./*  || :
+    rm -rf ./.* || :
 EOF
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://run.surfpool.run/ | bash
 RUN bash -lc 'npx -y skills add https://github.com/solana-foundation/solana-dev-skill --skill \* -y -g'
