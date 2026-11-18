@@ -253,14 +253,6 @@ RUN <<'EOF'
     '
 EOF
 
-# 安装 yarn
-RUN <<'EOF'
-    bash -lc '
-        npm i -g yarn
-        npm cache clean --force
-    '
-EOF
-
 # 安装 Go
 COPY --from=golang-builder /usr/local/go/ /usr/local/go/
 ENV PATH="$PATH:/usr/local/go/bin"
@@ -271,14 +263,7 @@ RUN if ! ([ linux-gnu = $OSTYPE ] && [ aarch64 = $HOSTTYPE ]); then curl -sSfL h
 RUN <<'EOF'
     apt_install() { apt update; apt install -y "$@"; apt autopurge -y; apt clean; rm -rf /var/lib/apt/lists/*; } >/dev/null
     apt_install build-essential pkg-config libssl-dev libudev-dev llvm libclang-dev protobuf-compiler
-    cd `mktemp -d`
-    bash -lc '
-        curl -sSfL https://raw.githubusercontent.com/otter-sec/anchor/master/avm/install | sh
-        avm install latest
-        avm use latest
-    '
-    rm -rf ./*  || :
-    rm -rf ./.* || :
+    bash -lc 'cargo install anchor-cli --locked --force'
 EOF
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://run.surfpool.run/ | bash
 RUN bash -lc 'npx -y skills add https://github.com/solana-foundation/solana-dev-skill --skill \* -y -g'
