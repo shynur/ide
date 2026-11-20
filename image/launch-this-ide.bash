@@ -66,7 +66,7 @@ done <~/.git-credentials
     if [ -d ~/.kimi-code.mounted ]; then
         mv -f ~/.kimi-code/* ~/.kimi-code.mounted/ && rmdir ~/.kimi-code && ln -s ~/.kimi-code.mounted/ ~/.kimi-code
     fi
-    kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
+    NODE_OPTIONS=--max-old-space-size=2048 kimi --auto web --host --dangerous-bypass-auth --no-open --insecure-no-tls --port 58627 --allowed-host .shynur.fun,shynur.fun,.cnb.run,.cnb.space &
 )
 mkdir -p ~/ws/{health,learn-{finance,crypto}}
 {
